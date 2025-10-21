@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,windows
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,csharp,windows
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,dotnetcore,windows
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,csharp,dotnetcore,windows
 
 ### Csharp ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -399,6 +399,15 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+### DotnetCore ###
+# .NET Core build folders
+bin/
+obj/
+
+# Common node modules locations
+/node_modules
+/wwwroot/node_modules
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -601,4 +610,4 @@ $RECYCLE.BIN/
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,windows
+# End of https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,dotnetcore,windows

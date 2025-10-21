@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NommusProject", "NommusProject\NommusProject.csproj", "{35F20FDD-049A-45CE-AA54-B512923E986D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NommusProject", "NommusProject\NommusProject.csproj", "{942492A9-A733-4385-B3BC-EE44DF73EF12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{35F20FDD-049A-45CE-AA54-B512923E986D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35F20FDD-049A-45CE-AA54-B512923E986D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35F20FDD-049A-45CE-AA54-B512923E986D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35F20FDD-049A-45CE-AA54-B512923E986D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{942492A9-A733-4385-B3BC-EE44DF73EF12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{942492A9-A733-4385-B3BC-EE44DF73EF12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{942492A9-A733-4385-B3BC-EE44DF73EF12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{942492A9-A733-4385-B3BC-EE44DF73EF12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A58564E6-92F5-4CE2-99E8-9F8670D2A1D3}
+		SolutionGuid = {C94AFDF4-3B8A-4FA5-9632-AAE2BA5F1CD8}
 	EndGlobalSection
 EndGlobal
