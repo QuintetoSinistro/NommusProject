@@ -14,9 +14,9 @@ namespace NommusProject;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class UserLogin : Window
 {
-    public MainWindow()
+    public UserLogin()
     {
         InitializeComponent();
     }
