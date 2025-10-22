@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NommusProject"
         mc:Ignorable="d"
         Title="Login" Height="450" Width="800">
-    <Grid Margin="0,-15,0,0">
+    <Grid Margin="0,-15,0,0"> 
         <Grid.Background>
             <LinearGradientBrush>
                 <GradientStop Color="#0f132e" Offset="0.0"/>
@@ -21,7 +21,13 @@
                 <TextBox x:Name="UsernameTextBox" Height="30" Margin="0,0,0,15"/>
                 <TextBlock Text="Password:" FontSize="14" Margin="0,0,0,5"/>
                 <PasswordBox x:Name="PasswordBox" Height="30" Margin="0,0,0,20"/>
-                <Button Content="Login" Width="100" Height="30" HorizontalAlignment="Center"/>
+                <Button Content="Login" Width="100" Height="30" HorizontalAlignment="Center">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
             </StackPanel>
         </Border>
     </Grid>
