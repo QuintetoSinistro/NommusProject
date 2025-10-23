@@ -14,7 +14,7 @@
                 <GradientStop Color="#536d88" Offset="0.8"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Border Background="#CCFFFFFF" CornerRadius="10" Padding="20" Width="300" Height="301" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Border Background="#CCFFFFFF" CornerRadius="10" Padding="20" Width="300" Height="301" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="400,0,0,0">
             <StackPanel>
                 <TextBlock Text="User Login" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
                 <TextBlock Text="Username:" FontSize="14" Margin="0,0,0,5"/>
@@ -24,5 +24,11 @@
                 <Button Content="Login" Width="100" Height="30" HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
+        <Border Background="#1affffff"  Padding="20" Width="300" Height="301" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="74,70,0,0">
+            <StackPanel>
+                <TextBlock Text="User Login" Foreground="White"  FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Window>
