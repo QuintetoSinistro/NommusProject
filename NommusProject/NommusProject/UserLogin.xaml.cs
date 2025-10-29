@@ -37,4 +37,23 @@ public partial class UserLogin : Window
             UsernamePlaceholder.Visibility = Visibility.Visible;
     }
 
+    private void PasswordBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        PasswordPlaceholder.Visibility = Visibility.Collapsed;
+    }
+
+    private void PasswordBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(PasswordBox.Password))
+            PasswordPlaceholder.Visibility = Visibility.Visible;
+    }
+
+    private void CadastrarSe_Click(object sender, RoutedEventArgs e)
+    {
+        // Aqui você coloca a ação do botão
+        MessageBox.Show("Abrir tela de cadastro...");
+    }
+
+
+
 }

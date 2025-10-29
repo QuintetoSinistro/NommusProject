@@ -43,7 +43,7 @@
                         FontWeight="Bold"
                         Height="35"
                         Margin="0,10,0,0"
-                        Click="Registrar_Click"/>
+                        />
         </StackPanel>
     </Grid>
 </Page>
