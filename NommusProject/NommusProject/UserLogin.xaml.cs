@@ -25,4 +25,16 @@ public partial class UserLogin : Window
     {
 
     }
+
+    private void UsernameTextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        UsernamePlaceholder.Visibility = Visibility.Collapsed;
+    }
+
+    private void UsernameTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(UsernameTextBox.Text))
+            UsernamePlaceholder.Visibility = Visibility.Visible;
+    }
+
 }

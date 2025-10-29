@@ -16,17 +16,45 @@
         </Grid.Background>
         <Border Background="#1affffff" Padding="20" Width="392" Height="309" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="350,0,0,0">
             <Grid>
-                <Border BorderBrush="white" BorderThickness="0,0,0,3" Margin="20,33,20,203"/>
-                <Border BorderThickness="0,0,0,3"
-        BorderBrush="white"
-        Margin="20,95,20,128"
-        Padding="0,0,0,4"/>
+                <!-- Campo de usuário com underline e placeholder -->
+                <Border BorderBrush="White" BorderThickness="0,0,0,3" Margin="20,33,20,203">
+                    <Grid>
+                        <TextBox x:Name="UsernameTextBox"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 Foreground="White"
+                 FontSize="30"
+                 Height="28"
+                 VerticalContentAlignment="Center"
+                 GotFocus="UsernameTextBox_GotFocus"
+                 LostFocus="UsernameTextBox_LostFocus"/>
+                        <TextBlock x:Name="UsernamePlaceholder"
+                   Text="Usuário"
+                   Foreground="#88FFFFFF"
+                   VerticalAlignment="Center"
+                   Margin="5,0,0,0"
+                   IsHitTestVisible="False"
+                   Visibility="Visible"/>
+                    </Grid>
+                </Border>
 
+                <!-- Campo de senha com underline -->
+                <Border BorderBrush="White"
+        BorderThickness="0,0,0,3"
+        Margin="20,95,20,128"
+        Padding="0,0,0,4">
+                    <PasswordBox x:Name="PasswordBox"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 Foreground="white"
+                 FontSize="16"
+                 Height="28"/>
+                </Border>
 
                 <Button Content="Acessar" FontSize="20" FontWeight="Bold"  VerticalContentAlignment="Center" Width="146" Height="39" HorizontalAlignment="Center" Background="#FFCECECE" Foreground="#101547" Margin="0,230,0,0" >
                     <Button.Resources>
                         <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="9"/>
+                            <Setter Property="CornerRadius" Value="10"/>
 
                         </Style>
                     </Button.Resources>
