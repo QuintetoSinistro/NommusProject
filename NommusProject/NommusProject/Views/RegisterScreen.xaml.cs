@@ -13,16 +13,33 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NommusProject.Views
+namespace NommusProject
 {
-    /// <summary>
-    /// Interação lógica para RegisterScreen.xam
-    /// </summary>
-    public partial class RegisterScreen : Page
+    public partial class RegisterScreen : Window
     {
         public RegisterScreen()
         {
             InitializeComponent();
+
+            // TextBoxes
+            NameTextBox.TextChanged += (s, e) => TogglePlaceholder(NameTextBox, NamePlaceholder);
+            CpfTextBox.TextChanged += (s, e) => TogglePlaceholder(CpfTextBox, CpfPlaceholder);
+            PhoneTextBox.TextChanged += (s, e) => TogglePlaceholder(PhoneTextBox, PhonePlaceholder);
+            EmailTextBox.TextChanged += (s, e) => TogglePlaceholder(EmailTextBox, EmailPlaceholder);
+
+            // PasswordBoxes
+            PasswordBox.PasswordChanged += (s, e) => TogglePlaceholder(PasswordBox, PasswordPlaceholder);
+            ConfirmPasswordBox.PasswordChanged += (s, e) => TogglePlaceholder(ConfirmPasswordBox, ConfirmPasswordPlaceholder);
+        }
+
+        private void TogglePlaceholder(TextBox box, TextBlock placeholder)
+        {
+            placeholder.Visibility = string.IsNullOrEmpty(box.Text) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void TogglePlaceholder(PasswordBox box, TextBlock placeholder)
+        {
+            placeholder.Visibility = string.IsNullOrEmpty(box.Password) ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }
