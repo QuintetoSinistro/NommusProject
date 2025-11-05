@@ -6,51 +6,70 @@ using System.Threading.Tasks;
 
 namespace NommusProject
 {
-    class Transacao
+    public class Transacao
     {
-        public int idTransacao { get; set; }
+        public int IdTransacao { get; set; }
+        public string DescricaoTransacao { get; set; }
+        public string TipoTransacao { get; set; } // "Entrada" ou "Saída"
+        public double ValorTransacao { get; set; }
+        public DateTime DataTransacao { get; set; }
+        public string OrigemTransacao { get; set; }
+        public int ParcelasTransacao { get; set; }
+        public string FormaPagamento { get; set; }
+        public string CondicaoPagamento { get; set; }
 
-        public string descricaoTransacao { get; set; }
-
-        public string tipoTransacao { get; set; }
-
-        public double valorTransacao { get; set; }  
-
-        public DateTime dataTransacao { get; set; }
-
-        public string origemTransacao { get; set; }
-
-        public int parcelasTransacao { get; set; }
-
-        public string formaPagamento { get; set; }
-
-        public string condicaoPagamento { get; set; }
-
-        public void inserirParcelas()
+        // Métodos de persistência
+        public async Task AdicionarTransacaoAsync()
         {
-            
+            var transacoes = await CarregarTransacoesAsync();
+            this.IdTransacao = transacoes.Count > 0 ? transacoes.Max(t => t.IdTransacao) + 1 : 1;
+            transacoes.Add(this);
+            await SalvarTransacoesAsync(transacoes);
         }
 
-        public void adicionarTransacao()
+        public async Task AlterarTransacaoAsync()
         {
-
+            var transacoes = await CarregarTransacoesAsync();
+            var transacaoExistente = transacoes.FirstOrDefault(t => t.IdTransacao == this.IdTransacao);
+            if (transacaoExistente != null)
+            {
+                transacoes.Remove(transacaoExistente);
+                transacoes.Add(this);
+                await SalvarTransacoesAsync(transacoes);
+            }
         }
 
-        public void alterarTransacao()
+        public async Task InativarTransacaoAsync()
         {
-
+            // Implementação para marcar transação como inativa
+            await AlterarTransacaoAsync();
         }
 
-        public void inativarTransacao()
+        // Métodos estáticos
+        public static async Task<List<Transacao>> CarregarTransacoesAsync()
         {
-
+            return await GerenciadorDados.CarregarAsync<List<Transacao>>("transacoes.json");
         }
 
-        public void visualizarTransacao()
+        public static async Task SalvarTransacoesAsync(List<Transacao> transacoes)
         {
-
+            await GerenciadorDados.SalvarAsync(transacoes, "transacoes.json");
         }
 
+        public static async Task<List<Transacao>> CarregarTransacoesPorPeriodoAsync(DateTime inicio, DateTime fim)
+        {
+            var transacoes = await CarregarTransacoesAsync();
+            return transacoes.Where(t => t.DataTransacao >= inicio && t.DataTransacao <= fim).ToList();
+        }
+
+        public void InserirParcelas()
+        {
+            // Implementação futura para transações parceladas
+        }
+
+        public void VisualizarTransacao()
+        {
+            // Implementação futura
+        }
     }
 }
- 
