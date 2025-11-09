@@ -50,8 +50,10 @@ public partial class UserLogin : Window
 
     private void CadastrarSe_Click(object sender, RoutedEventArgs e)
     {
-        // Aqui você coloca a ação do botão
-        MessageBox.Show("Abrir tela de cadastro...");
+        RegisterScreen registerScreen = new RegisterScreen();
+        registerScreen.Show();
+        this.Close();
+
     }
 
 

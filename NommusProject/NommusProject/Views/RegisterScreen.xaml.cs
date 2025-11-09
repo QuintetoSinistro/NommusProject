@@ -41,5 +41,12 @@ namespace NommusProject
         {
             placeholder.Visibility = string.IsNullOrEmpty(box.Password) ? Visibility.Visible : Visibility.Hidden;
         }
+
+        private void Login_click(object sender, RoutedEventArgs e)
+        {
+            UserLogin userLogin = new UserLogin();
+            userLogin.Show();
+            this.Close();
+        }
     }
 }
