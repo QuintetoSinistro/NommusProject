@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="Login" Height="450" Width="800" ResizeMode="CanResize">
     <Grid Margin="0,-15,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.Background>
             <LinearGradientBrush>
                 <GradientStop Color="#0f132e" Offset="0.0"/>
@@ -14,7 +18,7 @@
                 <GradientStop Color="#536d88" Offset="0.8"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Border Background="#1affffff" Padding="20" Width="392" Height="309" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="350,0,0,0">
+        <Border Background="#1affffff" Padding="20" Width="392" Height="309" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="350,0,0,0" Grid.Row="1">
             <Grid Margin="0,-13,0,-14">
                 <!-- Campo de usuário com underline e placeholder -->
                 <Border BorderBrush="White" BorderThickness="0,0,0,3" Margin="20,33,20,203">
@@ -141,7 +145,7 @@
 
             </Grid>
         </Border>
-        <Border Background="#101547"  Padding="20" Width="276" Height="305" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="74,70,0,0">
+        <Border Background="#101547"  Padding="20" Width="276" Height="305" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="74,70,0,0" Grid.RowSpan="2">
             <StackPanel>
 
                 <TextBlock Text="Login"  Foreground="White"  FontSize="35" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Center" RenderTransformOrigin="1.336,0.581"/>
