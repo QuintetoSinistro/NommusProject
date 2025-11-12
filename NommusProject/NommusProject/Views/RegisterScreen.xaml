@@ -4,7 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Cadastro" Height="600" Width="800" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen">
+        Title="Cadastro" Height="600" Width="800" 
+        ResizeMode="CanResizeWithGrip" 
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
 
     <Grid>
         <!-- Fundo gradiente -->
@@ -16,211 +19,216 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Container translúcido -->
-        <Border Background="#1affffff" 
-                Width="420" 
-                Height="520" 
-                CornerRadius="10"
-                VerticalAlignment="Center" 
-                HorizontalAlignment="Center" 
-                Padding="30">
+        <!-- Viewbox para escalar proporcionalmente -->
+        <Viewbox Stretch="Uniform">
+            <Grid Width="800" Height="600">
+                <!-- Container translúcido -->
+                <Border Background="#1affffff" 
+                        Width="420" 
+                        Height="520" 
+                        CornerRadius="10"
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        Padding="30">
 
-            <StackPanel>
+                    <StackPanel>
 
-                <!-- Título -->
-                <TextBlock Text="Cadastre-se" 
-                           Foreground="White" 
-                           FontSize="34" 
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,10"/>
+                        <!-- Título -->
+                        <TextBlock Text="Cadastre-se" 
+                                   Foreground="White" 
+                                   FontSize="34" 
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,10"/>
 
-                <Line X1="0" Y1="0" X2="360" Y2="0" Stroke="White" StrokeThickness="2" Margin="0,0,0,20"/>
+                        <Line X1="0" Y1="0" X2="360" Y2="0" Stroke="White" StrokeThickness="2" Margin="0,0,0,20"/>
 
-                <!-- Nome -->
-                <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
-                    <Grid>
-                        <TextBox x:Name="NameTextBox"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="White"
-                                 FontSize="18"
-                                 Height="28"
-                                 VerticalContentAlignment="Center"/>
-                        <TextBlock x:Name="NamePlaceholder"
-                                   Text="Nome *"
-                                   Foreground="#88FFFFFF"
-                                   FontSize="15"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0,0,0"
-                                   IsHitTestVisible="False"/>
-                    </Grid>
+                        <!-- Nome -->
+                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                            <Grid>
+                                <TextBox x:Name="NameTextBox"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="White"
+                                         FontSize="18"
+                                         Height="28"
+                                         VerticalContentAlignment="Center"/>
+                                <TextBlock x:Name="NamePlaceholder"
+                                           Text="Nome *"
+                                           Foreground="#88FFFFFF"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- CPF -->
+                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                            <Grid>
+                                <TextBox x:Name="CpfTextBox"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="White"
+                                         FontSize="18"
+                                         Height="28"
+                                         VerticalContentAlignment="Center"/>
+                                <TextBlock x:Name="CpfPlaceholder"
+                                           Text="CPF *"
+                                           Foreground="#88FFFFFF"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Telefone -->
+                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                            <Grid>
+                                <TextBox x:Name="PhoneTextBox"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="White"
+                                         FontSize="18"
+                                         Height="28"
+                                         VerticalContentAlignment="Center"/>
+                                <TextBlock x:Name="PhonePlaceholder"
+                                           Text="Telefone *"
+                                           Foreground="#88FFFFFF"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Email -->
+                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                            <Grid>
+                                <TextBox x:Name="EmailTextBox"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="White"
+                                         FontSize="18"
+                                         Height="28"
+                                         VerticalContentAlignment="Center"/>
+                                <TextBlock x:Name="EmailPlaceholder"
+                                           Text="Email"
+                                           Foreground="#88FFFFFF"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Senha -->
+                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                            <Grid>
+                                <PasswordBox x:Name="PasswordBox"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Foreground="White"
+                                             FontSize="18"
+                                             Height="28"/>
+                                <TextBlock x:Name="PasswordPlaceholder"
+                                           Text="Senha"
+                                           Foreground="#88FFFFFF"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Confirmar Senha -->
+                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,20">
+                            <Grid>
+                                <PasswordBox x:Name="ConfirmPasswordBox"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Foreground="White"
+                                             FontSize="18"
+                                             Height="28"/>
+                                <TextBlock x:Name="ConfirmPasswordPlaceholder"
+                                           Text="Confirme a senha"
+                                           Foreground="#88FFFFFF"
+                                           FontSize="15"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Botão Registrar -->
+                        <Button Content="Registrar" 
+                                Width="180" 
+                                Height="42" 
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Background="#FFCECECE" 
+                                Foreground="#101547"
+                                Cursor="Hand"
+                                BorderThickness="0"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,15">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <!-- Termos -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
+                            <CheckBox x:Name="TermsCheckBox" VerticalAlignment="Center" Margin="0,0,8,0">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="1.6" ScaleY="1.6"/>
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Width="300" Foreground="White">
+                                <Run Text="Sim, eu concordo com os "/>
+                                <Run Text="Termos de Serviço" FontWeight="Bold" Foreground="#FF78B5EA"/>
+                                <Run Text=", incluindo o acordo de usuário e a "/>
+                                <Run Text="Política de Privacidade" FontWeight="Bold" Foreground="#FF78B5EA" />
+                            </TextBlock>
+                        </StackPanel>
+
+                        <!-- Link Login -->
+                        <Button Content="Já tem uma conta? Faça Login"
+                                Click="Login_click"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="White"
+                                FontSize="13"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                Padding="0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <TextBlock Text="{TemplateBinding Content}"
+                                                           TextDecorations="Underline"
+                                                           Foreground="{TemplateBinding Foreground}"
+                                                           FontSize="{TemplateBinding FontSize}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="#88FFFFFF"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                    </StackPanel>
                 </Border>
-
-                <!-- CPF -->
-                <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
-                    <Grid>
-                        <TextBox x:Name="CpfTextBox"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="White"
-                                 FontSize="18"
-                                 Height="28"
-                                 VerticalContentAlignment="Center"/>
-                        <TextBlock x:Name="CpfPlaceholder"
-                                   Text="CPF *"
-                                   Foreground="#88FFFFFF"
-                                   FontSize="15"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0,0,0"
-                                   IsHitTestVisible="False"/>
-                    </Grid>
-                </Border>
-
-                <!-- Telefone -->
-                <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
-                    <Grid>
-                        <TextBox x:Name="PhoneTextBox"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="White"
-                                 FontSize="18"
-                                 Height="28"
-                                 VerticalContentAlignment="Center"/>
-                        <TextBlock x:Name="PhonePlaceholder"
-                                   Text="Telefone *"
-                                   Foreground="#88FFFFFF"
-                                   FontSize="15"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0,0,0"
-                                   IsHitTestVisible="False"/>
-                    </Grid>
-                </Border>
-
-                <!-- Email -->
-                <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
-                    <Grid>
-                        <TextBox x:Name="EmailTextBox"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="White"
-                                 FontSize="18"
-                                 Height="28"
-                                 VerticalContentAlignment="Center"/>
-                        <TextBlock x:Name="EmailPlaceholder"
-                                   Text="Email"
-                                   Foreground="#88FFFFFF"
-                                   FontSize="15"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0,0,0"
-                                   IsHitTestVisible="False"/>
-                    </Grid>
-                </Border>
-
-                <!-- Senha -->
-                <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
-                    <Grid>
-                        <PasswordBox x:Name="PasswordBox"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     Foreground="White"
-                                     FontSize="18"
-                                     Height="28"/>
-                        <TextBlock x:Name="PasswordPlaceholder"
-                                   Text="Senha"
-                                   Foreground="#88FFFFFF"
-                                   FontSize="15"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0,0,0"
-                                   IsHitTestVisible="False"/>
-                    </Grid>
-                </Border>
-
-                <!-- Confirmar Senha -->
-                <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,20">
-                    <Grid>
-                        <PasswordBox x:Name="ConfirmPasswordBox"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     Foreground="White"
-                                     FontSize="18"
-                                     Height="28"/>
-                        <TextBlock x:Name="ConfirmPasswordPlaceholder"
-                                   Text="Confirme a senha"
-                                   Foreground="#88FFFFFF"
-                                   FontSize="15"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0,0,0"
-                                   IsHitTestVisible="False"/>
-                    </Grid>
-                </Border>
-
-                <!-- Botão Registrar -->
-                <Button Content="Registrar" 
-                        Width="180" 
-                        Height="42" 
-                        FontSize="20"
-                        FontWeight="Bold"
-                        Background="#FFCECECE" 
-                        Foreground="#101547"
-                        Cursor="Hand"
-                        BorderThickness="0"
-                        HorizontalAlignment="Center"
-                        Margin="0,0,0,15">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="10"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-
-                <!-- Termos -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
-                    <CheckBox x:Name="TermsCheckBox" VerticalAlignment="Center" Margin="0,0,8,0">
-                        <CheckBox.LayoutTransform>
-                            <ScaleTransform ScaleX="1.6" ScaleY="1.6"/>
-                        </CheckBox.LayoutTransform>
-                    </CheckBox>
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Width="300" Foreground="White">
-                        <Run Text="Sim, eu concordo com os "/>
-                        <Run Text="Termos de Serviço" FontWeight="Bold" Foreground="#FF78B5EA"/>
-                        <Run Text=", incluindo o acordo de usuário e a "/>
-                        <Run Text="Política de Privacidade" FontWeight="Bold" Foreground="#FF78B5EA" />
-                    </TextBlock>
-                </StackPanel>
-
-                <!-- Link Login -->
-                <Button Content="Já tem uma conta? Faça Login"
-                        Click="Login_click"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Foreground="White"
-                        FontSize="13"
-                        Cursor="Hand"
-                        HorizontalAlignment="Center"
-                        Padding="0">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <TextBlock Text="{TemplateBinding Content}"
-                                                   TextDecorations="Underline"
-                                                   Foreground="{TemplateBinding Foreground}"
-                                                   FontSize="{TemplateBinding FontSize}"/>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#88FFFFFF"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
-            </StackPanel>
-        </Border>
+            </Grid>
+        </Viewbox>
     </Grid>
 </Window>

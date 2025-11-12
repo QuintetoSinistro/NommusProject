@@ -37,6 +37,7 @@ namespace Nommus
                 {
                     X1 = 0,
                     Y1 = i,
+                    // Removido o X2 duplicado, mantendo apenas um valor
                     X2 = 800, // Largura fixa generosa
                     Y2 = i,
                     Stroke = new SolidColorBrush(Color.FromRgb(51, 65, 85)),

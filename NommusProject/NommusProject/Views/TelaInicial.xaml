@@ -306,7 +306,7 @@
 
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Saldo atual" FontSize="14" Foreground="#94A3B8"/>
-                            <TextBlock x:Name="BalanceText" Text="R$ 500,45" FontSize="32" FontWeight="Bold" Foreground="#F1F5F9" 
+                            <TextBlock x:Name="BalanceText" Text="R$ 520,10" FontSize="32" FontWeight="Bold" Foreground="#F1F5F9" 
                                        Margin="0,4,0,0"/>
                         </StackPanel>
 
