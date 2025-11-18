@@ -107,7 +107,15 @@
                             </Button.Style>
                         </Button>
 
-                        <Button Content="Acessar" FontSize="20" FontWeight="Bold"  VerticalContentAlignment="Center" Width="146" Height="39" HorizontalAlignment="Center" Background="#FFCECECE" Foreground="#101547" Margin="0,210,0,0" >
+                        <Button Content="Acessar" 
+                                Click="Button_Click"
+                                FontSize="20" FontWeight="Bold"  
+                                VerticalContentAlignment="Center" 
+                                Width="146" Height="39" 
+                                HorizontalAlignment="Center" 
+                                Background="#FFCECECE" 
+                                Foreground="#101547" 
+                                Margin="0,210,0,0" >
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="10"/>

@@ -162,7 +162,9 @@
                         </Border>
 
                         <!-- Botão Registrar -->
-                        <Button Content="Registrar" 
+                        <Button x:Name="btnRegistrar" 
+                                Click="RegistrarButton_Click"
+                                Content="Registrar" 
                                 Width="180" 
                                 Height="42" 
                                 FontSize="20"

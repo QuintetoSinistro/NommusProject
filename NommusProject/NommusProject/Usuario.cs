@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +18,6 @@ namespace NommusProject
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
-        public string Name { get; set; }
         public string telefone { get; set; }
         public string senha { get; set; }
         public TipoUsuario Tipo { get; set; }

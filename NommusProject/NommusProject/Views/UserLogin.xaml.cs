@@ -10,10 +10,60 @@ namespace NommusProject
             InitializeComponent();
         }
 
-        private void UsernameTextBox_GotFocus(object sender, RoutedEventArgs e)
+    // ALTERAR ESTE MÉTODO - Login
+    private async void Button_Click(object sender, RoutedEventArgs e)
+    {
+        string email = UsernameTextBox.Text.Trim();
+        string senha = PasswordBox.Password;
+
+        // Validações básicas
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
         {
-            UsernamePlaceholder.Visibility = Visibility.Collapsed;
+            MessageBox.Show("Preencha email e senha.", "Atenção",
+                          MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
         }
+
+        try
+        {
+            // Buscar usuário pelo email
+            var usuario = await Usuario.BuscarUsuarioPorEmailAsync(email);
+
+            if (usuario == null)
+            {
+                MessageBox.Show("Email não cadastrado.", "Erro de Login",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Verificar senha (sem criptografia por enquanto)
+            if (usuario.senha != senha)
+            {
+                MessageBox.Show("Senha incorreta.", "Erro de Login",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Login bem-sucedido
+            MessageBox.Show($"Bem-vindo, {usuario.Nome}!", "Login Sucesso",
+                          MessageBoxButton.OK, MessageBoxImage.Information);
+
+            // Abrir tela principal - AJUSTE CONFORME SUA TELA INICIAL
+            Nommus.MainWindow mainWindow = new Nommus.MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Erro ao fazer login: {ex.Message}", "Erro",
+                          MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void UsernameTextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        UsernamePlaceholder.Visibility = Visibility.Collapsed;
+    }
 
         private void UsernameTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -36,27 +86,10 @@ namespace NommusProject
             }
         }
 
-        private void ForgotPasswordButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Nommus.ForgotPasswordWindow forgotPasswordWindow = new Nommus.ForgotPasswordWindow();
-                forgotPasswordWindow.Owner = this;
-                forgotPasswordWindow.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao abrir recuperação de senha: {ex.Message}", "Erro", 
-                               MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CadastrarSe_Click(object sender, RoutedEventArgs e)
-        {
-            RegisterScreen registerScreen = new RegisterScreen();
-            registerScreen.Show();
-            this.Close();
-
-        }
+    private void CadastrarSe_Click(object sender, RoutedEventArgs e)
+    {
+        RegisterScreen registerScreen = new RegisterScreen();
+        registerScreen.Show();
+        this.Close();
     }
 }
