@@ -11,13 +11,71 @@ namespace Nommus
     {
         private bool _isMouseOverPopup = false;
         private Button _lastClickedButton;
+        private Usuario _usuarioLogado;
 
-        public MainWindow()
+        public MainWindow() : this(new Usuario()
+        {
+            Nome = "Usuário",
+            Tipo = TipoUsuario.Basic,
+            saldoDisponivel = 0
+        })
+        {
+        }
+
+        public MainWindow(Usuario usuarioLogado)
         {
             InitializeComponent();
+            _usuarioLogado = usuarioLogado;
+            CarregarDadosUsuario();
             DrawDynamicChart();
         }
 
+        private void CarregarDadosUsuario()
+        {
+            if (_usuarioLogado != null)
+            {
+                // Personalizar perfil do usuário
+                var nomeTextBlock = FindName("UsuarioNomeText") as TextBlock;
+                var tipoTextBlock = FindName("UsuarioTipoText") as TextBlock;
+
+                if (nomeTextBlock != null)
+                    nomeTextBlock.Text = _usuarioLogado.Nome;
+
+                if (tipoTextBlock != null)
+                {
+                    tipoTextBlock.Text = _usuarioLogado.Tipo.ToString();
+                    // Personalizar cor baseada no tipo
+                    switch (_usuarioLogado.Tipo)
+                    {
+                        case TipoUsuario.Basic:
+                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246));
+                            break;
+                        case TipoUsuario.Premium:
+                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11));
+                            break;
+                        case TipoUsuario.Adm:
+                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68));
+                            break;
+                    }
+                }
+
+                // Atualizar saldo
+                var balanceText = FindName("BalanceText") as TextBlock;
+                if (balanceText != null)
+                {
+                    balanceText.Text = $"R$ {_usuarioLogado.saldoDisponivel:F2}";
+
+                    if (_usuarioLogado.saldoDisponivel >= 0)
+                    {
+                        balanceText.Foreground = new SolidColorBrush(Color.FromRgb(34, 197, 94));
+                    }
+                    else
+                    {
+                        balanceText.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68));
+                    }
+                }
+            }
+        }
         private void DrawDynamicChart()
         {
             ChartCanvas.Children.Clear();

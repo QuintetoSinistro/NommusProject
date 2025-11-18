@@ -83,8 +83,7 @@
         HorizontalAlignment="Center"
         Margin="0,170,0,0" 
         Height="21" 
-        VerticalAlignment="Top"
-        Click="ForgotPasswordButton_Click">
+        VerticalAlignment="Top">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">

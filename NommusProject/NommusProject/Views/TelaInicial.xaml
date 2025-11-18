@@ -226,8 +226,8 @@
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="40" Height="40" Fill="#64748B"/>
                         <StackPanel Margin="12,0,0,0">
-                            <TextBlock Text="Usuário" FontWeight="SemiBold" Foreground="#F1F5F9"/>
-                            <TextBlock Text="Premium" Foreground="#3B82F6" FontSize="11"/>
+                            <TextBlock x:Name="UsuarioNomeText" Text="Usuário" FontWeight="SemiBold" Foreground="#F1F5F9"/>
+                            <TextBlock x:Name="UsuarioTipoText" Text="Premium" Foreground="#3B82F6" FontSize="11"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -311,12 +311,7 @@
                         </StackPanel>
 
                         <!-- Botões principais que alternam entre Gastos e Receitas -->
-                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                            <Button x:Name="ExpensesMainButton" Content="Gastos" Style="{StaticResource ActionButtonStyle}" 
-                                    Click="ExpensesMainButton_Click" Margin="0,0,12,0"/>
-                            <Button x:Name="IncomeMainButton" Content="Receitas" Style="{StaticResource ActionButtonStyle}" 
-                                    Click="IncomeMainButton_Click"/>
-                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal"/>
                     </Grid>
                 </Border>
 
