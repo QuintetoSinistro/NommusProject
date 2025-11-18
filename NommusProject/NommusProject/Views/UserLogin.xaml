@@ -75,22 +75,25 @@
                         </Border>
 
                         <Button Content="Esqueci minha senha"
-                Background="Transparent"
-                BorderThickness="0"
-                Foreground="White"
-                FontSize="14"
-                Cursor="Hand"
-                HorizontalAlignment="Center"
-                Margin="0,170,0,0" Height="21" VerticalAlignment="Top">
+        Background="Transparent"
+        BorderThickness="0"
+        Foreground="White"
+        FontSize="14"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        Margin="0,170,0,0" 
+        Height="21" 
+        VerticalAlignment="Top"
+        Click="ForgotPasswordButton_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <TextBlock TextDecorations="Underline"
-                                           Text="{TemplateBinding Content}"
-                                           Foreground="{TemplateBinding Foreground}"
-                                           FontSize="{TemplateBinding FontSize}" />
+                                   Text="{TemplateBinding Content}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}" />
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>

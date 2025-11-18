@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using NommusProject;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -215,53 +216,84 @@ namespace Nommus
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
-            MessageBox.Show("Abrir tela para inserir novo gasto");
+            // Navegar para tela de gastos
+            NommusProject.ExpensesWindow expensesWindow = new NommusProject.ExpensesWindow();
+            expensesWindow.Show();
+            this.Close();
         }
 
         private void ViewExpensesButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
-            MessageBox.Show("Abrir tela para visualizar gastos");
+            // Navegar para tela de gastos
+            NommusProject.ExpensesWindow expensesWindow = new NommusProject.ExpensesWindow();
+            expensesWindow.Show();
+            this.Close();
         }
 
         private void AddIncomeButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
-            MessageBox.Show("Abrir tela para inserir nova receita");
+            // Navegar para tela de receitas
+            NommusProject.IncomeWindow incomeWindow = new NommusProject.IncomeWindow();
+            incomeWindow.Show();
+            this.Close();
         }
 
         private void ViewIncomeButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
-            MessageBox.Show("Abrir tela para visualizar receitas");
+            // Navegar para tela de receitas
+            NommusProject.IncomeWindow incomeWindow = new NommusProject.IncomeWindow();
+            incomeWindow.Show();
+            this.Close();
         }
 
+        // Navigation button click handlers
+        // Navigation methods
         // Navigation button click handlers
         private void FinanceButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
+            // Já está na tela principal
+            MessageBox.Show("Você já está na tela principal", "Informação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void CardsButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
+            // TODO: Implementar tela de Cartões
+            MessageBox.Show("Navegar para Cartões", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ExpensesButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
+            try
+            {
+                ExpensesWindow expensesWindow = new ExpensesWindow();
+                expensesWindow.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao navegar para Gastos: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
+            // TODO: Implementar tela de Créditos
+            MessageBox.Show("Navegar para Créditos", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void GoalsButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
+            // TODO: Implementar tela de Metas
+            MessageBox.Show("Navegar para Metas", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
         private void ReportsButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();

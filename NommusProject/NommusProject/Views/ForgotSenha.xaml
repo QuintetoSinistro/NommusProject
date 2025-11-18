@@ -1,0 +1,173 @@
+﻿<Window x:Class="Nommus.ForgotPasswordWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Recuperar Senha" Height="450" Width="400"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <Style x:Key="FormButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#3B82F6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                BorderBrush="#2563EB"
+                                BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#2563EB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="20"
+                                Width="30" Height="30">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#EF4444"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Overlay escuro -->
+    <Border Background="#80000000" MouseDown="Overlay_MouseDown">
+        <!-- Container principal -->
+        <Border Background="#1E293B" 
+                CornerRadius="12" 
+                Width="380" 
+                Height="420"
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Center">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <Border Grid.Row="0" Background="#334155" CornerRadius="12,12,0,0" Padding="20,15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Recuperar Senha" 
+                                   FontSize="20" FontWeight="Bold" Foreground="#F1F5F9"
+                                   VerticalAlignment="Center"/>
+
+                        <Button Grid.Column="1" Content="×" 
+                                Style="{StaticResource CloseButtonStyle}"
+                                Click="CloseButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Conteúdo -->
+                <StackPanel Grid.Row="1" Margin="30,25" VerticalAlignment="Center">
+
+                    <!-- Ícone -->
+                    <Viewbox Width="80" Height="80" Margin="0,0,0,20" HorizontalAlignment="Center">
+                        <Canvas Width="48" Height="48">
+                            <Ellipse Width="48" Height="48" Fill="#3B82F6" Opacity="0.1"/>
+                            <Path Data="M24,12 L36,24 L24,36 L12,24 Z M18,24 L30,24 M24,18 L24,30" 
+                                  Stroke="#3B82F6" StrokeThickness="2" StrokeLineJoin="Round"/>
+                            <Path Data="M20,28 L22,30 L28,24" 
+                                  Stroke="#10B981" StrokeThickness="2" StrokeLineJoin="Round"/>
+                        </Canvas>
+                    </Viewbox>
+
+                    <TextBlock Text="Esqueceu sua senha?" 
+                               FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9"
+                               HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Digite seu email abaixo e enviaremos um link para redefinir sua senha." 
+                               Foreground="#94A3B8" FontSize="13" TextWrapping="Wrap"
+                               HorizontalAlignment="Center" TextAlignment="Center"
+                               Margin="0,0,0,30" Width="300"/>
+
+                    <!-- Campo de Email -->
+                    <Border BorderBrush="#334155" BorderThickness="0,0,0,2" Margin="0,0,0,25">
+                        <Grid>
+                            <TextBox x:Name="EmailTextBox"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="White"
+                                     FontSize="16"
+                                     Height="35"
+                                     VerticalContentAlignment="Center"
+                                     GotFocus="EmailTextBox_GotFocus"
+                                     LostFocus="EmailTextBox_LostFocus"/>
+                            <TextBlock x:Name="EmailPlaceholder"
+                                       Text="Seu email"
+                                       Foreground="#88FFFFFF"
+                                       VerticalAlignment="Center"
+                                       Margin="5,0,0,0"
+                                       FontSize="14"
+                                       IsHitTestVisible="False"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Botão Enviar -->
+                    <Button Content="Enviar Link de Recuperação" 
+                            Style="{StaticResource FormButtonStyle}"
+                            Height="45"
+                            Click="SendRecoveryButton_Click"/>
+
+                    <!-- Mensagem de sucesso (inicialmente escondida) -->
+                    <Border x:Name="SuccessMessage" 
+                            Background="#10B981" 
+                            CornerRadius="8" 
+                            Padding="15" 
+                            Margin="0,20,0,0"
+                            Visibility="Collapsed">
+                        <StackPanel>
+                            <TextBlock Text="✓ Email enviado com sucesso!" 
+                                       Foreground="White" FontWeight="SemiBold"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock Text="Verifique sua caixa de entrada e siga as instruções para redefinir sua senha." 
+                                       Foreground="#E2E8F0" FontSize="12" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Border>
+</Window>
