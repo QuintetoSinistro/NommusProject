@@ -13,19 +13,10 @@ namespace Nommus
         private Button _lastClickedButton;
         private Usuario _usuarioLogado;
 
-        public MainWindow() : this(new Usuario()
-        {
-            Nome = "Usuário",
-            Tipo = TipoUsuario.Basic,
-            saldoDisponivel = 0
-        })
-        {
-        }
-
-        public MainWindow(Usuario usuarioLogado)
+        public MainWindow()
         {
             InitializeComponent();
-            _usuarioLogado = usuarioLogado;
+            _usuarioLogado = SessaoUsuario.UsuarioLogado;
             CarregarDadosUsuario();
             DrawDynamicChart();
         }

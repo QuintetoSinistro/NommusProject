@@ -52,7 +52,8 @@ namespace NommusProject
                                   MessageBoxButton.OK, MessageBoxImage.Information);
 
                     // ABRIR MAINWINDOW - PRECISA PASSAR O USUÁRIO
-                    MainWindow mainWindow = new MainWindow(usuario); // ← COM USUÁRIO
+                    SessaoUsuario.UsuarioLogado = usuario; // ← DEFINIR USUÁRIO NA SESSÃO
+                    MainWindow mainWindow = new MainWindow(); // ← COM USUÁRIO
                     mainWindow.Show();
                     this.Close();
                 }

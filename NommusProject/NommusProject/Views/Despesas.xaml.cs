@@ -16,7 +16,7 @@ namespace NommusProject
         {
             try
             {
-                Nommus.MainWindow mainWindow = new Nommus.MainWindow();
+                MainWindow mainWindow = new MainWindow();
                 mainWindow.Show();
                 this.Close();
             }
