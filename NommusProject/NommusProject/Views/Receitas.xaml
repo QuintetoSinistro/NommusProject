@@ -268,19 +268,52 @@
                         <ColumnDefinition Width="400"/>
                     </Grid.ColumnDefinitions>
 
+
                     <!-- Lista de Receitas -->
                     <Border Grid.Column="0" Background="#1E293B" CornerRadius="12" Padding="20" Margin="0,0,15,0">
                         <StackPanel>
                             <TextBlock Text="Receitas Registradas" 
-                                       FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9"
-                                       Margin="0,0,0,20"/>
+                   FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9"
+                   Margin="0,0,0,20"/>
 
-                            <!-- Lista de receitas (placeholder) -->
-                            <Border Background="#0F172A" CornerRadius="8" Padding="15" Height="300">
-                                <TextBlock Text="Nenhuma receita registrada ainda..." 
-                                           Foreground="#94A3B8" FontSize="14"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
+                            <!-- Lista de receitas (AGORA FUNCIONAL) -->
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
+                                <ItemsControl x:Name="ReceitasItemsControl">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#0F172A" CornerRadius="8" Padding="15" Margin="0,0,0,10"
+                                BorderBrush="#334155" BorderThickness="1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Grid.Column="0">
+                                                        <TextBlock Text="{Binding DescricaoTransacao}" 
+                                               Foreground="#F1F5F9" FontWeight="SemiBold" FontSize="14"/>
+                                                        <TextBlock Text="{Binding FonteReceita}" 
+                                               Foreground="#94A3B8" FontSize="12" Margin="0,5,0,0"/>
+                                                        <TextBlock Text="{Binding DataTransacao, StringFormat='dd/MM/yyyy'}" 
+                                               Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
+                                                    </StackPanel>
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding ValorTransacao, StringFormat='R$ {0:F2}'}" 
+                                           Foreground="#10B981" FontWeight="Bold" FontSize="16"
+                                           VerticalAlignment="Center" Margin="0,0,15,0"/>
+
+                                                    <Button Grid.Column="2" Content="✕" 
+                                        Background="Transparent" Foreground="#EF4444" FontSize="12"
+                                        Width="25" Height="25" Padding="0"
+                                        Click="RemoverReceita_Click"
+                                        Tag="{Binding Id}"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
 
                             <!-- Ações em lote -->
                             <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">

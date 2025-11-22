@@ -16,7 +16,13 @@ namespace NommusProject
             this.TipoTransacao = "Receita";
             this.FormaPagamento = "Depósito";
         }
-
+        public static async Task<List<Receita>> CarregarReceitasPorUsuarioAsync(int usuarioId)
+        {
+            var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(usuarioId);
+            return transacoes.Where(t => t.TipoTransacao == "Receita")
+                            .Cast<Receita>()
+                            .ToList();
+        }
         public async Task AdicionarReceitaAsync(int usuarioId, string categoriaId = "receita-salario")
         {
             this.UsuarioId = usuarioId;
