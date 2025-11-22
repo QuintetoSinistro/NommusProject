@@ -55,15 +55,18 @@ namespace NommusProject
         {
             try
             {
+                // ✅ SOLUÇÃO SIMPLES: Criar NOVA MainWindow para forçar recarregamento
                 MainWindow mainWindow = new MainWindow();
                 mainWindow.Show();
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao voltar para dashboard: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Erro ao voltar para dashboard: {ex.Message}", "Erro",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private async void AddIncome_Click(object sender, RoutedEventArgs e)
         {
@@ -96,10 +99,8 @@ namespace NommusProject
                 // Converter data
                 DateTime data = DateTime.Parse(DateTextBox.Text);
 
-                // ✅ ATUALIZAR SALDO MANUALMENTE (GARANTIDO)
-                double saldoAntigo = SessaoUsuario.UsuarioLogado.saldoDisponivel;
-                SessaoUsuario.UsuarioLogado.saldoDisponivel += valor;
-                await SessaoUsuario.UsuarioLogado.SalvarUsuarioAsync();
+                // ✅ OPÇÃO A: DEIXAR APENAS o AdicionarTransacaoAsync cuidar do saldo
+                double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
 
                 // Criar e salvar receita
                 var receita = new Receita
@@ -114,12 +115,16 @@ namespace NommusProject
                     TipoTransacao = "Receita"
                 };
 
-                // Salvar transação
+                // ⚠️ APENAS ESTA LINHA atualiza o saldo
                 await receita.AdicionarTransacaoAsync();
 
+                // ✅ AGORA: Recarregar usuário ATUALIZADO do arquivo
+                var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
+                SessaoUsuario.UsuarioLogado = usuarioAtualizado;
+
                 MessageBox.Show($"Receita adicionada com sucesso!\n" +
-                               $"Saldo anterior: R$ {saldoAntigo:F2}\n" +
-                               $"Saldo atual: R$ {SessaoUsuario.UsuarioLogado.saldoDisponivel:F2}",
+                               $"Saldo antes: R$ {saldoAntes:F2}\n" +
+                               $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
                                "Sucesso",
                                MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -131,10 +136,7 @@ namespace NommusProject
                 DateTextBox.Text = DateTime.Today.ToString("dd/MM/yyyy");
 
                 // Atualizar lista
-                if (ReceitasItemsControl.ItemsSource is IList<Transacao> lista)
-                {
-                    lista.Insert(0, receita);
-                }
+                _receitasCollection.Insert(0, receita);
             }
             catch (FormatException)
             {
@@ -207,42 +209,6 @@ namespace NommusProject
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private async void LimparTransacoesDuplicadas()
-        {
-            try
-            {
-                var transacoes = await Transacao.CarregarTransacoesAsync();
-
-                // MÉTODO MAIS AGRESSIVO: Remover por descrição e valor duplicados
-                var transacoesUnicas = transacoes
-                    .GroupBy(t => new { t.DescricaoTransacao, t.ValorTransacao, t.DataTransacao.Date })
-                    .Select(g => g.First())
-                    .ToList();
-
-                // Atualizar IDs para serem sequenciais
-                for (int i = 0; i < transacoesUnicas.Count; i++)
-                {
-                    transacoesUnicas[i].IdTransacao = i + 1;
-                }
-
-                if (transacoes.Count != transacoesUnicas.Count)
-                {
-                    await Transacao.SalvarTransacoesAsync(transacoesUnicas);
-                    MessageBox.Show($"Removidas {transacoes.Count - transacoesUnicas.Count} transações duplicadas!\n" +
-                                  $"Antes: {transacoes.Count} transações\n" +
-                                  $"Depois: {transacoesUnicas.Count} transações",
-                                  "Limpeza Concluída",
-                                  MessageBoxButton.OK,
-                                  MessageBoxImage.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao limpar duplicatas: {ex.Message}", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
         private async void RemoverReceita_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
@@ -251,16 +217,6 @@ namespace NommusProject
                 {
                     if (button.DataContext is Transacao transacao)
                     {
-                        // DEBUG: Mostrar informações da transação
-                        MessageBox.Show($"Vai remover:\n" +
-                                      $"ID: {transacao.IdTransacao}\n" +
-                                      $"Descrição: {transacao.DescricaoTransacao}\n" +
-                                      $"Valor: R$ {transacao.ValorTransacao:F2}\n" +
-                                      $"Data: {transacao.DataTransacao:dd/MM/yyyy}",
-                                      "Debug - Transação",
-                                      MessageBoxButton.OK,
-                                      MessageBoxImage.Information);
-
                         var resultado = MessageBox.Show("Tem certeza que deseja remover esta receita?",
                                                       "Confirmar Remoção",
                                                       MessageBoxButton.YesNo,
@@ -268,32 +224,24 @@ namespace NommusProject
 
                         if (resultado == MessageBoxResult.Yes)
                         {
-                            // DEBUG: Saldo antes
+                            // ✅ OPÇÃO A: DEIXAR APENAS o ExcluirTransacaoAsync cuidar do saldo
                             double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
 
-                            // 1. Remover do saldo manualmente
-                            SessaoUsuario.UsuarioLogado.saldoDisponivel -= transacao.ValorTransacao;
-
-                            // DEBUG: Saldo após subtração
-                            double saldoAposSubtracao = SessaoUsuario.UsuarioLogado.saldoDisponivel;
-
-                            // 2. Salvar usuário
-                            await SessaoUsuario.UsuarioLogado.SalvarUsuarioAsync();
-
-                            // 3. Remover a transação do JSON
+                            // ⚠️ APENAS ESTA LINHA atualiza o saldo
                             await transacao.ExcluirTransacaoAsync();
 
-                            // 4. Recarregar a lista
+                            // ✅ AGORA: Recarregar usuário ATUALIZADO do arquivo
+                            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
+                            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
+
+                            // Recarregar a lista
                             CarregarReceitas();
 
-                            // DEBUG: Mostrar tudo
-                            MessageBox.Show($"Remoção concluída!\n\n" +
+                            MessageBox.Show($"Receita removida com sucesso!\n" +
                                           $"Saldo antes: R$ {saldoAntes:F2}\n" +
-                                          $"Valor removido: R$ {transacao.ValorTransacao:F2}\n" +
-                                          $"Saldo após: R$ {saldoAposSubtracao:F2}",
-                                          "Debug - Remoção",
-                                          MessageBoxButton.OK,
-                                          MessageBoxImage.Information);
+                                          $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
+                                          "Sucesso",
+                                          MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                 }

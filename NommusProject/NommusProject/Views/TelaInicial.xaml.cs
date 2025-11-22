@@ -17,10 +17,16 @@ namespace Nommus
         {
             InitializeComponent();
             _usuarioLogado = SessaoUsuario.UsuarioLogado;
+
+            // DEBUG: Verificar se está carregando saldo correto
+            if (_usuarioLogado != null)
+            {
+                Console.WriteLine($"MainWindow - Saldo carregado: R$ {_usuarioLogado.saldoDisponivel:F2}");
+            }
+
             CarregarDadosUsuario();
             DrawDynamicChart();
         }
-
         private void CarregarDadosUsuario()
         {
             if (_usuarioLogado != null)
@@ -39,32 +45,44 @@ namespace Nommus
                     switch (_usuarioLogado.Tipo)
                     {
                         case TipoUsuario.Basic:
-                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246));
+                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246)); // Azul
                             break;
                         case TipoUsuario.Premium:
-                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11));
+                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Dourado
                             break;
                         case TipoUsuario.Adm:
-                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68));
+                            tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Vermelho
                             break;
                     }
                 }
 
-                // Atualizar saldo
-                var balanceText = FindName("BalanceText") as TextBlock;
-                if (balanceText != null)
+                // ✅✅✅ GARANTIR que o saldo está sendo mostrado corretamente
+                if (BalanceText != null)
                 {
-                    balanceText.Text = $"R$ {_usuarioLogado.saldoDisponivel:F2}";
+                    BalanceText.Text = $"R$ {_usuarioLogado.saldoDisponivel:F2}";
 
+                    // Personalizar cor do saldo
                     if (_usuarioLogado.saldoDisponivel >= 0)
                     {
-                        balanceText.Foreground = new SolidColorBrush(Color.FromRgb(34, 197, 94));
+                        BalanceText.Foreground = new SolidColorBrush(Color.FromRgb(34, 197, 94)); // Verde
                     }
                     else
                     {
-                        balanceText.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68));
+                        BalanceText.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Vermelho
                     }
                 }
+                else
+                {
+                    // DEBUG: Se BalanceText for null
+                    MessageBox.Show("BalanceText não encontrado!", "Erro",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                // DEBUG: Se usuário for null
+                MessageBox.Show("Usuário não encontrado na sessão!", "Erro",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void DrawDynamicChart()
