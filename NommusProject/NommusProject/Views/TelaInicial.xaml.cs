@@ -154,19 +154,6 @@ namespace Nommus
             }
         }
 
-        // Main button click handlers
-        private void ExpensesMainButton_Click(object sender, RoutedEventArgs e)
-        {
-            _lastClickedButton = (Button)sender;
-            ShowPopup("Expenses");
-        }
-
-        private void IncomeMainButton_Click(object sender, RoutedEventArgs e)
-        {
-            _lastClickedButton = (Button)sender;
-            ShowPopup("Income");
-        }
-
         private void ShowPopup(string popupType)
         {
             // Esconder todos os popups primeiro
@@ -261,42 +248,6 @@ namespace Nommus
             }
         }
 
-        // Sub menu button click handlers
-        private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
-        {
-            HideAllPopups();
-            // Navegar para tela de gastos
-            NommusProject.ExpensesWindow expensesWindow = new NommusProject.ExpensesWindow();
-            expensesWindow.Show();
-            this.Close();
-        }
-
-        private void ViewExpensesButton_Click(object sender, RoutedEventArgs e)
-        {
-            HideAllPopups();
-            // Navegar para tela de gastos
-            NommusProject.ExpensesWindow expensesWindow = new NommusProject.ExpensesWindow();
-            expensesWindow.Show();
-            this.Close();
-        }
-
-        private void AddIncomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            HideAllPopups();
-            // Navegar para tela de receitas
-            NommusProject.IncomeWindow incomeWindow = new NommusProject.IncomeWindow();
-            incomeWindow.Show();
-            this.Close();
-        }
-
-        private void ViewIncomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            HideAllPopups();
-            // Navegar para tela de receitas
-            NommusProject.IncomeWindow incomeWindow = new NommusProject.IncomeWindow();
-            incomeWindow.Show();
-            this.Close();
-        }
 
         // Navigation button click handlers
         // Navigation methods
@@ -333,8 +284,9 @@ namespace Nommus
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
             HideAllPopups();
-            // TODO: Implementar tela de Créditos
-            MessageBox.Show("Navegar para Créditos", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information);
+            IncomeWindow incomeWindow = new IncomeWindow();
+            incomeWindow.Show();
+            this.Close();
         }
 
         private void GoalsButton_Click(object sender, RoutedEventArgs e)

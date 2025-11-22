@@ -168,7 +168,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Gastos" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click">
+                    <Button Content="Desepesas" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -186,7 +186,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Créditos" Style="{StaticResource SidebarButtonStyle}" Click="CreditsButton_Click">
+                    <Button Content="Receitas" Style="{StaticResource SidebarButtonStyle}" Click="CreditsButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -348,13 +348,6 @@
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="4" Opacity="0.3" BlurRadius="10"/>
                             </Border.Effect>
-                            <StackPanel>
-                                <TextBlock Text="Gastos" FontSize="16" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,15"/>
-                                <Button Content="Inserir Novo Gasto" Style="{StaticResource PopupButtonStyle}" 
-                                        Click="AddExpenseButton_Click" Margin="0,0,0,8"/>
-                                <Button Content="Visualizar Gastos" Style="{StaticResource PopupButtonStyle}" 
-                                        Click="ViewExpensesButton_Click"/>
-                            </StackPanel>
                         </Border>
 
                         <!-- Pop-up flutuante para Receitas -->
@@ -373,13 +366,6 @@
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="4" Opacity="0.3" BlurRadius="10"/>
                             </Border.Effect>
-                            <StackPanel>
-                                <TextBlock Text="Receitas" FontSize="16" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,15"/>
-                                <Button Content="Inserir Nova Receita" Style="{StaticResource PopupButtonStyle}" 
-                                        Click="AddIncomeButton_Click" Margin="0,0,0,8"/>
-                                <Button Content="Visualizar Receitas" Style="{StaticResource PopupButtonStyle}" 
-                                        Click="ViewIncomeButton_Click"/>
-                            </StackPanel>
                         </Border>
                     </Grid>
                 </Border>

@@ -10,8 +10,41 @@ namespace NommusProject
         public IncomeWindow()
         {
             InitializeComponent();
+            CarregarDadosUsuario();
         }
 
+        private void CarregarDadosUsuario()
+        {
+            if (SessaoUsuario.UsuarioLogado != null)
+            {
+                var usuario = SessaoUsuario.UsuarioLogado;
+
+                // Personalizar perfil do usuário
+                if (UsuarioNomeText != null)
+                    UsuarioNomeText.Text = usuario.Nome;
+
+                if (UsuarioTipoText != null)
+                {
+                    UsuarioTipoText.Text = usuario.Tipo.ToString();
+                    // Personalizar cor baseada no tipo
+                    switch (usuario.Tipo)
+                    {
+                        case TipoUsuario.Basic:
+                            UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
+                                System.Windows.Media.Color.FromRgb(59, 130, 246)); // Azul
+                            break;
+                        case TipoUsuario.Premium:
+                            UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
+                                System.Windows.Media.Color.FromRgb(245, 158, 11)); // Dourado
+                            break;
+                        case TipoUsuario.Adm:
+                            UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
+                                System.Windows.Media.Color.FromRgb(239, 68, 68)); // Vermelho
+                            break;
+                    }
+                }
+            }
+        }
         private void BackToDashboard_Click(object sender, RoutedEventArgs e)
         {
             try
