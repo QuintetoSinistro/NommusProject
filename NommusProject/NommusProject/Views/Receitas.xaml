@@ -168,7 +168,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Gastos" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click">
+                    <Button Content="Despesas" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -186,20 +186,19 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Receitas" Style="{StaticResource SidebarButtonStyle}" Click="IncomeButton_Click"
-                            Background="#1E293B" Foreground="#3B82F6">
+                    <Button Content="Receitas" Style="{StaticResource SidebarButtonStyle}" Click="IncomeButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Viewbox Width="24" Height="24" Margin="0,0,12,0">
                                         <Canvas Width="16" Height="16">
                                             <Path Data="M8,2 L8,14 M2,8 L14,8" 
-                                                  Stroke="#10B981" StrokeThickness="2"/>
-                                            <Path Data="M5,5 L11,11" 
-                                                  Stroke="#10B981" StrokeThickness="1"/>
+                              Stroke="#F59E0B" StrokeThickness="2"/>
+                                            <Path Data="M5,5 L11,11 M11,5 L5,11" 
+                              Stroke="#F59E0B" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#3B82F6" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>

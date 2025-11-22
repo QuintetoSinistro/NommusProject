@@ -4,7 +4,9 @@
         Title="Nommus - Controle Financeiro" Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
         Background="#0F172A"
-        MouseMove="Window_MouseMove">
+        MouseMove="Window_MouseMove"
+        WindowState="Maximized">
+
 
     <Window.Resources>
         <!-- Styles (mantidos iguais) -->
