@@ -30,7 +30,6 @@ namespace NommusProject
         {
             var transacoes = await CarregarTransacoesAsync();
             this.IdTransacao = transacoes.Count > 0 ? transacoes.Max(t => t.IdTransacao) + 1 : 1;
-            this.DataTransacao = DateTime.Now;
             transacoes.Add(this);
             await SalvarTransacoesAsync(transacoes);
 

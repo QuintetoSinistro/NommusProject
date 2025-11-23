@@ -4,6 +4,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using LiveCharts;
+using LiveCharts.Wpf;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nommus
 {
@@ -25,7 +29,20 @@ namespace Nommus
             }
 
             CarregarDadosUsuario();
-            DrawDynamicChart();
+            CarregarEstatisticas();
+            CarregarDadosGrafico();
+        }
+
+        public class ChartViewModel
+        {
+            public SeriesCollection SeriesCollection { get; set; }
+            public string[] Labels { get; set; }
+            public Func<double, string> Formatter { get; set; }
+
+            public ChartViewModel()
+            {
+                Formatter = value => value.ToString("C");
+            }
         }
         private void CarregarDadosUsuario()
         {
@@ -85,208 +102,156 @@ namespace Nommus
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void DrawDynamicChart()
+
+        private async void CarregarEstatisticas()
         {
-            ChartCanvas.Children.Clear();
-            DrawGridLines();
+            if (SessaoUsuario.UsuarioLogado == null) return;
 
-            // Dados de exemplo que ocupam toda a largura
-            double[] financialData = { 50, 80, -30, 120, -60, 100, -20, 150, -40, 120, 50, -30, 90, 110, -50, 130, -20, 100 };
-
-            DrawColoredChart(financialData);
-        }
-
-        private void DrawGridLines()
-        {
-            // Grid lines que vão até o final
-            for (int i = 0; i <= 250; i += 50)
+            try
             {
-                Line gridLine = new Line
+                var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
+
+                if (transacoes.Any())
                 {
-                    X1 = 0,
-                    Y1 = i,
-                    // Removido o X2 duplicado, mantendo apenas um valor
-                    X2 = 800, // Largura fixa generosa
-                    Y2 = i,
-                    Stroke = new SolidColorBrush(Color.FromRgb(51, 65, 85)),
-                    StrokeThickness = 1
-                };
-                ChartCanvas.Children.Add(gridLine);
+                    // TOTAL de Receitas
+                    var totalReceitas = transacoes
+                        .Where(t => t.TipoTransacao == "Receita")
+                        .Sum(t => t.ValorTransacao);
+
+                    MaxReceitaText.Text = $"R$ {totalReceitas:F2}";
+
+                    // TOTAL de Despesas
+                    var totalDespesas = transacoes
+                        .Where(t => t.TipoTransacao == "Despesa")
+                        .Sum(t => t.ValorTransacao);
+
+                    MaxDespesaText.Text = $"R$ {totalDespesas:F2}";
+                }
+                else
+                {
+                    MaxReceitaText.Text = "R$ 0,00";
+                    MaxDespesaText.Text = "R$ 0,00";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao carregar estatísticas: {ex.Message}");
+                MaxReceitaText.Text = "R$ 0,00";
+                MaxDespesaText.Text = "R$ 0,00";
             }
         }
-
-        private void DrawColoredChart(double[] data)
+        private async void CarregarDadosGrafico()
         {
-            // Calcular escala para ocupar toda a largura disponível
-            double availableWidth = 780; // Largura menos margens
-            double xScale = availableWidth / (data.Length - 1);
-            double yBase = 125; // Base line (zero point)
-            double yScale = 0.8; // Escala vertical
+            if (SessaoUsuario.UsuarioLogado == null) return;
 
-            Point previousPoint = new Point(10, yBase);
-
-            for (int i = 0; i < data.Length; i++)
+            try
             {
-                double x = 10 + (i * xScale);
-                double y = yBase - (data[i] * yScale);
+                var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
 
-                // Garantir que os pontos não ultrapassem os limites
-                if (x > 790) x = 790;
-                if (y < 10) y = 10;
-                if (y > 240) y = 240;
-
-                Point currentPoint = new Point(x, y);
-
-                Brush lineColor = data[i] >= 0 ?
-                    new SolidColorBrush(Color.FromRgb(16, 185, 129)) :
-                    new SolidColorBrush(Color.FromRgb(239, 68, 68));
-
-                // Desenhar segmento da linha
-                if (i > 0) // Não desenhar linha do primeiro ponto
-                {
-                    Line segment = new Line
+                // Agrupar transações por mês
+                var dadosPorMes = transacoes
+                    .GroupBy(t => new { t.DataTransacao.Year, t.DataTransacao.Month })
+                    .Select(g => new
                     {
-                        X1 = previousPoint.X,
-                        Y1 = previousPoint.Y,
-                        X2 = currentPoint.X,
-                        Y2 = currentPoint.Y,
-                        Stroke = lineColor,
-                        StrokeThickness = 3
-                    };
-                    ChartCanvas.Children.Add(segment);
+                        Mes = new DateTime(g.Key.Year, g.Key.Month, 1),
+                        Receitas = g.Where(t => t.TipoTransacao == "Receita").Sum(t => t.ValorTransacao),
+                        Despesas = g.Where(t => t.TipoTransacao == "Despesa").Sum(t => t.ValorTransacao)
+                    })
+                    .OrderBy(d => d.Mes)
+                    .ToList();
+
+                if (!dadosPorMes.Any())
+                {
+                    // Se não há dados, mostrar gráfico vazio
+                    FinanceChart.Series = new SeriesCollection();
+                    return;
                 }
 
-                // Desenhar ponto
-                Ellipse point = new Ellipse
+                // Preparar dados para o gráfico
+                var saldoValues = new ChartValues<double>();
+                var receitaValues = new ChartValues<double>();
+                var despesaValues = new ChartValues<double>();
+                var labels = new List<string>();
+
+                double saldoAcumulado = 0;
+
+                foreach (var mes in dadosPorMes)
                 {
-                    Width = 6,
-                    Height = 6,
-                    Fill = lineColor
-                };
+                    saldoAcumulado += (mes.Receitas - mes.Despesas);
 
-                Canvas.SetLeft(point, currentPoint.X - 3);
-                Canvas.SetTop(point, currentPoint.Y - 3);
-                ChartCanvas.Children.Add(point);
+                    saldoValues.Add(saldoAcumulado);
+                    receitaValues.Add(mes.Receitas);
+                    despesaValues.Add(mes.Despesas);
+                    labels.Add(mes.Mes.ToString("MMM/yy"));
+                }
 
-                previousPoint = currentPoint;
+                // Atualizar gráfico
+                FinanceChart.Series = new SeriesCollection
+        {
+            new LineSeries
+            {
+                Title = "Saldo",
+                Values = saldoValues,
+                Stroke = new SolidColorBrush(Color.FromRgb(59, 130, 246)),
+                StrokeThickness = 3,
+                PointGeometry = null
+            },
+            new LineSeries
+            {
+                Title = "Receitas",
+                Values = receitaValues,
+                Stroke = new SolidColorBrush(Color.FromRgb(16, 185, 129)),
+                StrokeThickness = 2,
+                PointGeometry = null
+            },
+            new LineSeries
+            {
+                Title = "Despesas",
+                Values = despesaValues,
+                Stroke = new SolidColorBrush(Color.FromRgb(239, 68, 68)),
+                StrokeThickness = 2,
+                PointGeometry = null
+            }
+        };
+
+                FinanceChart.AxisX.Clear();
+                FinanceChart.AxisX.Add(new Axis
+                {
+                    Title = "Mês",
+                    Labels = labels.ToArray(),
+                    Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184))
+                });
+
+                FinanceChart.AxisY.Clear();
+                FinanceChart.AxisY.Add(new Axis
+                {
+                    Title = "R$",
+                    LabelFormatter = value => value.ToString("C"),
+                    Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184))
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao carregar gráfico: {ex.Message}");
             }
         }
-
-        private void ShowPopup(string popupType)
-        {
-            // Esconder todos os popups primeiro
-            ExpensesPopup.Visibility = Visibility.Collapsed;
-            IncomePopup.Visibility = Visibility.Collapsed;
-
-            // Posicionar o popup perto do botão clicado
-            if (_lastClickedButton != null)
-            {
-                var buttonPosition = _lastClickedButton.PointToScreen(new Point(0, 0));
-                var gridPosition = ChartGrid.PointToScreen(new Point(0, 0));
-
-                double relativeX = buttonPosition.X - gridPosition.X;
-                double relativeY = buttonPosition.Y - gridPosition.Y + _lastClickedButton.ActualHeight + 5;
-
-                // Ajustar para não sair da tela
-                if (relativeX + 200 > ChartGrid.ActualWidth)
-                {
-                    relativeX = ChartGrid.ActualWidth - 220;
-                }
-
-                if (popupType == "Expenses")
-                {
-                    ExpensesPopup.Margin = new Thickness(relativeX, relativeY, 0, 0);
-                    ExpensesPopup.Visibility = Visibility.Visible;
-                }
-                else if (popupType == "Income")
-                {
-                    IncomePopup.Margin = new Thickness(relativeX, relativeY, 0, 0);
-                    IncomePopup.Visibility = Visibility.Visible;
-                }
-            }
-
-            _isMouseOverPopup = true;
-        }
-
-        private void HideAllPopups()
-        {
-            ExpensesPopup.Visibility = Visibility.Collapsed;
-            IncomePopup.Visibility = Visibility.Collapsed;
-            _isMouseOverPopup = false;
-        }
-
-        // Eventos de mouse para os pop-ups
-        private void Popup_MouseEnter(object sender, MouseEventArgs e)
-        {
-            _isMouseOverPopup = true;
-        }
-
-        private void Popup_MouseLeave(object sender, MouseEventArgs e)
-        {
-            _isMouseOverPopup = false;
-            // Esconder pop-up após um pequeno delay
-            var timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(300);
-            timer.Tick += (s, args) =>
-            {
-                timer.Stop();
-                if (!_isMouseOverPopup)
-                {
-                    HideAllPopups();
-                }
-            };
-            timer.Start();
-        }
-
-        // Evento de movimento do mouse na janela principal
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
-            // Se não está sobre nenhum pop-up, verificar se deve escondê-los
-            if (!_isMouseOverPopup && (ExpensesPopup.Visibility == Visibility.Visible || IncomePopup.Visibility == Visibility.Visible))
-            {
-                var mousePos = e.GetPosition(ChartGrid);
-
-                // Verificar se o mouse está longe dos pop-ups
-                bool isMouseNearExpensesPopup = ExpensesPopup.Visibility == Visibility.Visible &&
-                    mousePos.X >= ExpensesPopup.Margin.Left - 50 &&
-                    mousePos.X <= ExpensesPopup.Margin.Left + ExpensesPopup.Width + 50 &&
-                    mousePos.Y >= ExpensesPopup.Margin.Top - 50 &&
-                    mousePos.Y <= ExpensesPopup.Margin.Top + ExpensesPopup.Height + 50;
-
-                bool isMouseNearIncomePopup = IncomePopup.Visibility == Visibility.Visible &&
-                    mousePos.X >= IncomePopup.Margin.Left - 50 &&
-                    mousePos.X <= IncomePopup.Margin.Left + IncomePopup.Width + 50 &&
-                    mousePos.Y >= IncomePopup.Margin.Top - 50 &&
-                    mousePos.Y <= IncomePopup.Margin.Top + IncomePopup.Height + 50;
-
-                if (!isMouseNearExpensesPopup && !isMouseNearIncomePopup)
-                {
-                    HideAllPopups();
-                }
-            }
-        }
-
-
         // Navigation button click handlers
         // Navigation methods
         // Navigation button click handlers
         private void FinanceButton_Click(object sender, RoutedEventArgs e)
         {
-            HideAllPopups();
             // Já está na tela principal
             MessageBox.Show("Você já está na tela principal", "Informação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void CardsButton_Click(object sender, RoutedEventArgs e)
         {
-            HideAllPopups();
             // TODO: Implementar tela de Cartões
             MessageBox.Show("Navegar para Cartões", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ExpensesButton_Click(object sender, RoutedEventArgs e)
         {
-            HideAllPopups();
             try
             {
                 ExpensesWindow expensesWindow = new ExpensesWindow();
@@ -301,7 +266,6 @@ namespace Nommus
 
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
-            HideAllPopups();
             IncomeWindow incomeWindow = new IncomeWindow();
             incomeWindow.Show();
             this.Close();
@@ -309,19 +273,14 @@ namespace Nommus
 
         private void GoalsButton_Click(object sender, RoutedEventArgs e)
         {
-            HideAllPopups();
             // TODO: Implementar tela de Metas
             MessageBox.Show("Navegar para Metas", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private void ReportsButton_Click(object sender, RoutedEventArgs e)
         {
-            HideAllPopups();
+
         }
 
         // Quando o canvas é carregado, redesenhar o gráfico com as dimensões corretas
-        private void ChartCanvas_Loaded(object sender, RoutedEventArgs e)
-        {
-            DrawDynamicChart();
-        }
     }
 }

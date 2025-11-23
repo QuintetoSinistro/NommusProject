@@ -21,7 +21,6 @@ namespace NommusProject
         {
             this.UsuarioId = usuarioId;
             this.CategoriaId = categoriaId;
-            this.DataTransacao = DateTime.Now;
             await this.AdicionarTransacaoAsync();
         }
 
