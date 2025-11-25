@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NommusProject
 {
@@ -20,7 +10,12 @@ namespace NommusProject
         public RegisterScreen()
         {
             InitializeComponent();
+            ConfigurarPlaceholders();
+        }
 
+        // Configura os eventos para mostrar/ocultar placeholders
+        private void ConfigurarPlaceholders()
+        {
             // TextBoxes
             NameTextBox.TextChanged += (s, e) => TogglePlaceholder(NameTextBox, NamePlaceholder);
             CpfTextBox.TextChanged += (s, e) => TogglePlaceholder(CpfTextBox, CpfPlaceholder);
@@ -32,16 +27,19 @@ namespace NommusProject
             ConfirmPasswordBox.PasswordChanged += (s, e) => TogglePlaceholder(ConfirmPasswordBox, ConfirmPasswordPlaceholder);
         }
 
+        // Controla a visibilidade do placeholder para TextBox
         private void TogglePlaceholder(TextBox box, TextBlock placeholder)
         {
             placeholder.Visibility = string.IsNullOrEmpty(box.Text) ? Visibility.Visible : Visibility.Hidden;
         }
 
+        // Controla a visibilidade do placeholder para PasswordBox
         private void TogglePlaceholder(PasswordBox box, TextBlock placeholder)
         {
             placeholder.Visibility = string.IsNullOrEmpty(box.Password) ? Visibility.Visible : Visibility.Hidden;
         }
 
+        // Navega para a tela de login
         private void Login_click(object sender, RoutedEventArgs e)
         {
             UserLogin userLogin = new UserLogin();
@@ -49,15 +47,21 @@ namespace NommusProject
             this.Close();
         }
 
-        // ADICIONAR ESTE MÉTODO - evento de clique do botão Registrar
+        // Processa o cadastro do novo usuário
         private async void RegistrarButton_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidarDados())
                 return;
 
+            await ProcessarCadastro();
+        }
+
+        // Executa o processo de cadastro do usuário
+        private async System.Threading.Tasks.Task ProcessarCadastro()
+        {
             try
             {
-                // Verificar se email já existe
+                // Verifica se o email já está cadastrado
                 var usuarioExistente = await Usuario.BuscarUsuarioPorEmailAsync(EmailTextBox.Text.Trim());
                 if (usuarioExistente != null)
                 {
@@ -66,18 +70,18 @@ namespace NommusProject
                     return;
                 }
 
-                // Criar novo usuário
+                // Cria novo usuário
                 var novoUsuario = new Usuario
                 {
                     Nome = NameTextBox.Text.Trim(),
                     Email = EmailTextBox.Text.Trim(),
                     telefone = PhoneTextBox.Text.Trim(),
-                    senha = PasswordBox.Password, // Sem criptografia por enquanto
+                    senha = PasswordBox.Password, // TODO: Implementar criptografia
                     Tipo = TipoUsuario.Basic,
                     saldoDisponivel = 0
                 };
 
-                // Salvar usuário
+                // Salva o usuário no banco de dados
                 bool salvou = await novoUsuario.SalvarUsuarioAsync();
 
                 if (salvou)
@@ -85,7 +89,7 @@ namespace NommusProject
                     MessageBox.Show("Cadastro realizado com sucesso!", "Sucesso",
                                   MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Ir para tela de login
+                    // Redireciona para tela de login
                     UserLogin loginWindow = new UserLogin();
                     loginWindow.Show();
                     this.Close();
@@ -103,10 +107,35 @@ namespace NommusProject
             }
         }
 
-        // ADICIONAR ESTE MÉTODO - validações
+        // Valida todos os dados do formulário de cadastro
         private bool ValidarDados()
         {
-            // 1. Campos obrigatórios
+            // Verifica campos obrigatórios
+            if (!ValidarCamposObrigatorios())
+                return false;
+
+            // Valida formato do CPF
+            if (!ValidarCpf())
+                return false;
+
+            // Valida formato do email
+            if (!ValidarEmail())
+                return false;
+
+            // Valida senhas
+            if (!ValidarSenhas())
+                return false;
+
+            // Verifica aceitação dos termos
+            if (!ValidarTermos())
+                return false;
+
+            return true;
+        }
+
+        // Valida se todos os campos obrigatórios foram preenchidos
+        private bool ValidarCamposObrigatorios()
+        {
             if (string.IsNullOrWhiteSpace(NameTextBox.Text) ||
                 string.IsNullOrWhiteSpace(CpfTextBox.Text) ||
                 string.IsNullOrWhiteSpace(PhoneTextBox.Text) ||
@@ -118,8 +147,12 @@ namespace NommusProject
                               MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            return true;
+        }
 
-            // 2. CPF com 11 dígitos numéricos
+        // Valida o formato do CPF
+        private bool ValidarCpf()
+        {
             string cpf = CpfTextBox.Text.Trim();
             if (cpf.Length != 11 || !cpf.All(char.IsDigit))
             {
@@ -127,17 +160,26 @@ namespace NommusProject
                               MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            return true;
+        }
 
-            // 3. Email válido
+        // Valida o formato do email
+        private bool ValidarEmail()
+        {
             string email = EmailTextBox.Text.Trim();
-            if (!ValidarEmail(email))
+            if (!ValidarFormatoEmail(email))
             {
                 MessageBox.Show("Digite um email válido.", "Atenção",
                               MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            return true;
+        }
 
-            // 4. Senhas coincidem
+        // Valida as senhas informadas
+        private bool ValidarSenhas()
+        {
+            // Verifica se as senhas coincidem
             if (PasswordBox.Password != ConfirmPasswordBox.Password)
             {
                 MessageBox.Show("As senhas não coincidem.", "Atenção",
@@ -145,7 +187,7 @@ namespace NommusProject
                 return false;
             }
 
-            // 5. Senha tem pelo menos 6 caracteres
+            // Verifica tamanho mínimo da senha
             if (PasswordBox.Password.Length < 6)
             {
                 MessageBox.Show("A senha deve ter pelo menos 6 caracteres.", "Atenção",
@@ -153,19 +195,23 @@ namespace NommusProject
                 return false;
             }
 
-            // 6. Termos aceitos
+            return true;
+        }
+
+        // Valida se os termos foram aceitos
+        private bool ValidarTermos()
+        {
             if (TermsCheckBox.IsChecked != true)
             {
                 MessageBox.Show("Você deve aceitar os termos de serviço.", "Atenção",
                               MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
             return true;
         }
 
-        // ADICIONAR ESTE MÉTODO - validação de email
-        private bool ValidarEmail(string email)
+        // Valida o formato do email usando MailAddress
+        private bool ValidarFormatoEmail(string email)
         {
             try
             {

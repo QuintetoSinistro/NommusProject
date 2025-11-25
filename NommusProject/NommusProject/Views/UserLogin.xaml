@@ -5,12 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NommusProject"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800" 
+        Title="Login" 
+        Height="450" 
+        Width="800" 
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         WindowState="Maximized">
 
     <Grid>
+        <!-- Fundo com gradiente -->
         <Grid.Background>
             <LinearGradientBrush>
                 <GradientStop Color="#0f132e" Offset="0.0"/>
@@ -19,7 +22,7 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Container que centraliza o conteúdo original mas permite expansão -->
+        <!-- Container principal que centraliza o conteúdo -->
         <Viewbox Stretch="Uniform">
             <Grid Width="800" Height="450">
                 <Grid.RowDefinitions>
@@ -27,72 +30,90 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Border Background="#1affffff" Padding="20" Width="392" Height="309" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="350,0,0,0" Grid.Row="1">
+                <!-- Painel de login -->
+                <Border Background="#1affffff" 
+                        Padding="20" 
+                        Width="392" 
+                        Height="309" 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Left" 
+                        Margin="350,0,0,0" 
+                        Grid.Row="1">
+
                     <Grid Margin="0,-13,0,-14">
-                        <!-- Campo de usuário com underline e placeholder -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,3" Margin="20,51,20,203">
+
+                        <!-- Campo de email/usuário -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,3" 
+                                Margin="20,51,20,203">
                             <Grid>
                                 <TextBox x:Name="UsernameTextBox"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Foreground="White"
-                         FontSize="20"
-                         Height="28"
-                         VerticalContentAlignment="Center"
-                         GotFocus="UsernameTextBox_GotFocus"
-                         LostFocus="UsernameTextBox_LostFocus"/>
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="White"
+                                         FontSize="20"
+                                         Height="28"
+                                         VerticalContentAlignment="Center"
+                                         GotFocus="UsernameTextBox_GotFocus"
+                                         LostFocus="UsernameTextBox_LostFocus"/>
+
                                 <TextBlock x:Name="UsernamePlaceholder"
-                           Text="Usuário"
-                           Foreground="#88FFFFFF"
-                           VerticalAlignment="Center"
-                           Margin="5,4,0,0"
-                           FontSize="15"
-                           IsHitTestVisible="False"
-                           Visibility="Visible"/>
+                                           Text="Usuário"
+                                           Foreground="#88FFFFFF"
+                                           VerticalAlignment="Center"
+                                           Margin="5,4,0,0"
+                                           FontSize="15"
+                                           IsHitTestVisible="False"
+                                           Visibility="Visible"/>
                             </Grid>
                         </Border>
 
-                        <!-- Campo de senha com underline e placeholder -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,3" Margin="20,125,20,128">
+                        <!-- Campo de senha -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,3" 
+                                Margin="20,125,20,128">
                             <Grid>
                                 <PasswordBox x:Name="PasswordBox"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             Foreground="White"
-                             FontSize="20"
-                             Height="28"
-                             GotFocus="PasswordBox_GotFocus"
-                             LostFocus="PasswordBox_LostFocus"/>
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Foreground="White"
+                                             FontSize="20"
+                                             Height="28"
+                                             GotFocus="PasswordBox_GotFocus"
+                                             LostFocus="PasswordBox_LostFocus"/>
+
                                 <TextBlock x:Name="PasswordPlaceholder"
-                           Text="Senha"
-                           Foreground="#88FFFFFF"
-                           VerticalAlignment="Center"
-                           Margin="5,12,0,0"
-                           FontSize="15"
-                           IsHitTestVisible="False"
-                           Visibility="Visible"/>
+                                           Text="Senha"
+                                           Foreground="#88FFFFFF"
+                                           VerticalAlignment="Center"
+                                           Margin="5,12,0,0"
+                                           FontSize="15"
+                                           IsHitTestVisible="False"
+                                           Visibility="Visible"/>
                             </Grid>
                         </Border>
 
+                        <!-- Botão Esqueci Senha -->
                         <Button Content="Esqueci minha senha"
-        Background="Transparent"
-        BorderThickness="0"
-        Foreground="White"
-        FontSize="14"
-        Cursor="Hand"
-        HorizontalAlignment="Center"
-        Margin="0,170,0,0" 
-        Height="21" 
-        VerticalAlignment="Top">
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="White"
+                                FontSize="14"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                Margin="0,170,0,0" 
+                                Height="21" 
+                                VerticalAlignment="Top">
+
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <TextBlock TextDecorations="Underline"
-                                   Text="{TemplateBinding Content}"
-                                   Foreground="{TemplateBinding Foreground}"
-                                   FontSize="{TemplateBinding FontSize}" />
+                                                           Text="{TemplateBinding Content}"
+                                                           Foreground="{TemplateBinding Foreground}"
+                                                           FontSize="{TemplateBinding FontSize}" />
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -106,15 +127,19 @@
                             </Button.Style>
                         </Button>
 
+                        <!-- Botão Acessar -->
                         <Button Content="Acessar" 
                                 Click="Button_Click"
-                                FontSize="20" FontWeight="Bold"  
+                                FontSize="20" 
+                                FontWeight="Bold"  
                                 VerticalContentAlignment="Center" 
-                                Width="146" Height="39" 
+                                Width="146" 
+                                Height="39" 
                                 HorizontalAlignment="Center" 
                                 Background="#FFCECECE" 
                                 Foreground="#101547" 
-                                Margin="0,210,0,0" >
+                                Margin="0,210,0,0">
+
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="10"/>
@@ -122,26 +147,28 @@
                             </Button.Resources>
                         </Button>
 
+                        <!-- Botão Registrar -->
                         <Button Content="Registrar-se"
-                Background="Transparent"
-                BorderThickness="0"
-                Foreground="White"
-                FontSize="13"
-                Cursor="Hand"
-                Padding="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Margin="0,275,0,0"
-                Click="CadastrarSe_Click">
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="White"
+                                FontSize="13"
+                                Cursor="Hand"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Margin="0,275,0,0"
+                                Click="CadastrarSe_Click">
+
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <TextBlock Text="{TemplateBinding Content}"
-                                           TextDecorations="Underline"
-                                           Foreground="{TemplateBinding Foreground}"
-                                           FontSize="{TemplateBinding FontSize}"/>
+                                                           TextDecorations="Underline"
+                                                           Foreground="{TemplateBinding Foreground}"
+                                                           FontSize="{TemplateBinding FontSize}"/>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -156,13 +183,53 @@
                         </Button>
                     </Grid>
                 </Border>
-                <Border Background="#101547"  Padding="20" Width="276" Height="305" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="74,70,0,0" Grid.RowSpan="2">
+
+                <!-- Painel de boas-vindas -->
+                <Border Background="#101547"  
+                        Padding="20" 
+                        Width="276" 
+                        Height="305" 
+                        VerticalAlignment="Top" 
+                        HorizontalAlignment="Left" 
+                        Margin="74,70,0,0" 
+                        Grid.RowSpan="2">
+
                     <StackPanel>
-                        <TextBlock Text="Login"  Foreground="White"  FontSize="35" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Center" RenderTransformOrigin="1.336,0.581"/>
-                        <Line X1="0" Y1="0" X2="250" Y2="0" Stroke="White" StrokeThickness="4" Margin="0,0,0,10" />
-                        <TextBlock Text="Eai!" FontFamily="Consolas"  Foreground="White"  FontSize="45" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Bem-Vindo" FontFamily="Consolas"  Foreground="White"  FontSize="45" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Devolta!" FontFamily="Consolas"  Foreground="White"  FontSize="45"  Margin="0,0,0,0" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Login"  
+                                   Foreground="White"  
+                                   FontSize="35" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,10" 
+                                   HorizontalAlignment="Center"/>
+
+                        <Line X1="0" 
+                              Y1="0" 
+                              X2="250" 
+                              Y2="0" 
+                              Stroke="White" 
+                              StrokeThickness="4" 
+                              Margin="0,0,0,10" />
+
+                        <TextBlock Text="Eai!" 
+                                   FontFamily="Consolas"  
+                                   Foreground="White"  
+                                   FontSize="45" 
+                                   Margin="0,0,0,5" 
+                                   HorizontalAlignment="Center"/>
+
+                        <TextBlock Text="Bem-Vindo" 
+                                   FontFamily="Consolas"  
+                                   Foreground="White"  
+                                   FontSize="45" 
+                                   Margin="0,0,0,5" 
+                                   HorizontalAlignment="Center"/>
+
+                        <TextBlock Text="Devolta!" 
+                                   FontFamily="Consolas"  
+                                   Foreground="White"  
+                                   FontSize="45"  
+                                   Margin="0,0,0,0" 
+                                   HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </Grid>

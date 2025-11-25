@@ -1,4 +1,5 @@
 ﻿using Nommus;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,13 +12,13 @@ namespace NommusProject
             InitializeComponent();
         }
 
-        // ALTERAR ESTE MÉTODO - Login
+        // Método principal de login - precisa ser revisado
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             string email = UsernameTextBox.Text.Trim();
             string senha = PasswordBox.Password;
 
-            // Validações básicas
+            // Valida se os campos estão preenchidos
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
             {
                 MessageBox.Show("Preencha email e senha.", "Atenção",
@@ -27,9 +28,10 @@ namespace NommusProject
 
             try
             {
-                // Buscar usuário pelo email
+                // Busca usuário no banco de dados pelo email
                 var usuario = await Usuario.BuscarUsuarioPorEmailAsync(email);
 
+                // Verifica se usuário existe
                 if (usuario == null)
                 {
                     MessageBox.Show("Email não cadastrado.", "Erro de Login",
@@ -37,7 +39,7 @@ namespace NommusProject
                     return;
                 }
 
-                // Verificar senha (sem criptografia por enquanto)
+                // Verifica se a senha está correta (sem criptografia por enquanto)
                 if (usuario.senha != senha)
                 {
                     MessageBox.Show("Senha incorreta.", "Erro de Login",
@@ -45,15 +47,15 @@ namespace NommusProject
                     return;
                 }
 
-                // Login bem-sucedido
+                // Login bem-sucedido - verificação adicional de segurança
                 if (usuario != null && usuario.senha == senha)
                 {
                     MessageBox.Show($"Bem-vindo, {usuario.Nome}!", "Login Sucesso",
                                   MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // ABRIR MAINWINDOW - PRECISA PASSAR O USUÁRIO
-                    SessaoUsuario.UsuarioLogado = usuario; // ← DEFINIR USUÁRIO NA SESSÃO
-                    MainWindow mainWindow = new MainWindow(); // ← COM USUÁRIO
+                    // Define usuário na sessão e abre a tela principal
+                    SessaoUsuario.UsuarioLogado = usuario;
+                    MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
                     this.Close();
                 }
@@ -65,11 +67,13 @@ namespace NommusProject
             }
         }
 
+        // Oculta o placeholder quando o campo de email recebe foco
         private void UsernameTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             UsernamePlaceholder.Visibility = Visibility.Collapsed;
         }
 
+        // Mostra o placeholder se o campo de email estiver vazio ao perder foco
         private void UsernameTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(UsernameTextBox.Text))
@@ -78,11 +82,13 @@ namespace NommusProject
             }
         }
 
+        // Oculta o placeholder quando o campo de senha recebe foco
         private void PasswordBox_GotFocus(object sender, RoutedEventArgs e)
         {
             PasswordPlaceholder.Visibility = Visibility.Collapsed;
         }
 
+        // Mostra o placeholder se o campo de senha estiver vazio ao perder foco
         private void PasswordBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(PasswordBox.Password))
@@ -91,6 +97,7 @@ namespace NommusProject
             }
         }
 
+        // Abre a tela de cadastro para novos usuários
         private void CadastrarSe_Click(object sender, RoutedEventArgs e)
         {
             RegisterScreen registerScreen = new RegisterScreen();

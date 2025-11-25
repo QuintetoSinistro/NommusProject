@@ -4,13 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Cadastro" Height="600" Width="800" 
+        Title="Cadastro" 
+        Height="600" 
+        Width="800" 
         ResizeMode="CanResizeWithGrip" 
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
 
     <Grid>
-        <!-- Fundo gradiente -->
+        <!-- Fundo com gradiente azul -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="#0f132e" Offset="0.0"/>
@@ -19,10 +21,11 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Viewbox para escalar proporcionalmente -->
+        <!-- Viewbox para manter proporção em diferentes tamanhos de tela -->
         <Viewbox Stretch="Uniform">
             <Grid Width="800" Height="600">
-                <!-- Container translúcido -->
+
+                <!-- Container principal do formulário -->
                 <Border Background="#1affffff" 
                         Width="420" 
                         Height="520" 
@@ -33,7 +36,7 @@
 
                     <StackPanel>
 
-                        <!-- Título -->
+                        <!-- Cabeçalho do formulário -->
                         <TextBlock Text="Cadastre-se" 
                                    Foreground="White" 
                                    FontSize="34" 
@@ -41,10 +44,16 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,10"/>
 
-                        <Line X1="0" Y1="0" X2="360" Y2="0" Stroke="White" StrokeThickness="2" Margin="0,0,0,20"/>
+                        <!-- Linha decorativa abaixo do título -->
+                        <Line X1="0" Y1="0" X2="360" Y2="0" 
+                              Stroke="White" 
+                              StrokeThickness="2" 
+                              Margin="0,0,0,20"/>
 
-                        <!-- Nome -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                        <!-- Campo: Nome -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,2" 
+                                Margin="0,0,0,10">
                             <Grid>
                                 <TextBox x:Name="NameTextBox"
                                          Background="Transparent"
@@ -63,8 +72,10 @@
                             </Grid>
                         </Border>
 
-                        <!-- CPF -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                        <!-- Campo: CPF -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,2" 
+                                Margin="0,0,0,10">
                             <Grid>
                                 <TextBox x:Name="CpfTextBox"
                                          Background="Transparent"
@@ -83,8 +94,10 @@
                             </Grid>
                         </Border>
 
-                        <!-- Telefone -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                        <!-- Campo: Telefone -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,2" 
+                                Margin="0,0,0,10">
                             <Grid>
                                 <TextBox x:Name="PhoneTextBox"
                                          Background="Transparent"
@@ -103,8 +116,10 @@
                             </Grid>
                         </Border>
 
-                        <!-- Email -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                        <!-- Campo: Email -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,2" 
+                                Margin="0,0,0,10">
                             <Grid>
                                 <TextBox x:Name="EmailTextBox"
                                          Background="Transparent"
@@ -123,8 +138,10 @@
                             </Grid>
                         </Border>
 
-                        <!-- Senha -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,10">
+                        <!-- Campo: Senha -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,2" 
+                                Margin="0,0,0,10">
                             <Grid>
                                 <PasswordBox x:Name="PasswordBox"
                                              Background="Transparent"
@@ -142,8 +159,10 @@
                             </Grid>
                         </Border>
 
-                        <!-- Confirmar Senha -->
-                        <Border BorderBrush="White" BorderThickness="0,0,0,2" Margin="0,0,0,20">
+                        <!-- Campo: Confirmar Senha -->
+                        <Border BorderBrush="White" 
+                                BorderThickness="0,0,0,2" 
+                                Margin="0,0,0,20">
                             <Grid>
                                 <PasswordBox x:Name="ConfirmPasswordBox"
                                              Background="Transparent"
@@ -161,7 +180,7 @@
                             </Grid>
                         </Border>
 
-                        <!-- Botão Registrar -->
+                        <!-- Botão de Registrar -->
                         <Button x:Name="btnRegistrar" 
                                 Click="RegistrarButton_Click"
                                 Content="Registrar" 
@@ -182,22 +201,33 @@
                             </Button.Resources>
                         </Button>
 
-                        <!-- Termos -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
-                            <CheckBox x:Name="TermsCheckBox" VerticalAlignment="Center" Margin="0,0,8,0">
+                        <!-- Checkbox de Termos e Condições -->
+                        <StackPanel Orientation="Horizontal" 
+                                    HorizontalAlignment="Center" 
+                                    Margin="0,0,0,5">
+                            <CheckBox x:Name="TermsCheckBox" 
+                                      VerticalAlignment="Center" 
+                                      Margin="0,0,8,0">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="1.6" ScaleY="1.6"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
-                            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Width="300" Foreground="White">
+                            <TextBlock TextWrapping="Wrap" 
+                                       TextAlignment="Center" 
+                                       Width="300" 
+                                       Foreground="White">
                                 <Run Text="Sim, eu concordo com os "/>
-                                <Run Text="Termos de Serviço" FontWeight="Bold" Foreground="#FF78B5EA"/>
+                                <Run Text="Termos de Serviço" 
+                                     FontWeight="Bold" 
+                                     Foreground="#FF78B5EA"/>
                                 <Run Text=", incluindo o acordo de usuário e a "/>
-                                <Run Text="Política de Privacidade" FontWeight="Bold" Foreground="#FF78B5EA" />
+                                <Run Text="Política de Privacidade" 
+                                     FontWeight="Bold" 
+                                     Foreground="#FF78B5EA" />
                             </TextBlock>
                         </StackPanel>
 
-                        <!-- Link Login -->
+                        <!-- Link para fazer Login (já tem conta) -->
                         <Button Content="Já tem uma conta? Faça Login"
                                 Click="Login_click"
                                 Background="Transparent"

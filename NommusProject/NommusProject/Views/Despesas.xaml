@@ -2,13 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
-        Title="Nommus - Despesas" Height="700" Width="1200"
+        Title="Nommus - Despesas" 
+        Height="700" 
+        Width="1200"
         WindowStartupLocation="CenterScreen"
         Background="#0F172A"
         WindowState="Maximized">
 
+    <!-- Recursos e estilos da aplicação -->
     <Window.Resources>
-        <!-- Styles -->
+
+        <!-- Estilo para botões da sidebar -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -41,6 +45,7 @@
             </Setter>
         </Style>
 
+        <!-- Estilo para botões de ação -->
         <Style x:Key="ActionButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#1E293B"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -71,6 +76,7 @@
             </Setter>
         </Style>
 
+        <!-- Estilo para botões de formulário -->
         <Style x:Key="FormButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -100,6 +106,7 @@
             </Setter>
         </Style>
 
+        <!-- Estilo para botões de perigo (vermelho) -->
         <Style x:Key="DangerButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#EF4444"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -130,14 +137,18 @@
         </Style>
     </Window.Resources>
 
+    <!-- Layout principal com sidebar e conteúdo -->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar -->
-        <Border Grid.Column="0" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,0,1,0">
+        <!-- Sidebar de navegação -->
+        <Border Grid.Column="0" 
+                Background="#1E293B" 
+                BorderBrush="#334155" 
+                BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -145,8 +156,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logo -->
-                <StackPanel Grid.Row="0" Margin="20,30" Orientation="Horizontal" HorizontalAlignment="Left">
+                <!-- Logo e nome da aplicação -->
+                <StackPanel Grid.Row="0" 
+                            Margin="20,30" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Left">
                     <Viewbox Width="40" Height="40">
                         <Canvas Width="24" Height="24">
                             <Path Data="M3,12 L7,8 L11,14 L15,10 L19,16 L21,12" 
@@ -159,13 +173,21 @@
                             <Ellipse Canvas.Left="20" Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
                         </Canvas>
                     </Viewbox>
-                    <TextBlock Text="Nommus" FontSize="24" FontWeight="Bold" Foreground="#F1F5F9" 
-                               VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    <TextBlock Text="Nommus" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Foreground="#F1F5F9" 
+                               VerticalAlignment="Center" 
+                               Margin="12,0,0,0"/>
                 </StackPanel>
 
-                <!-- Navigation Menu -->
+                <!-- Menu de navegação -->
                 <StackPanel Grid.Row="1" Margin="10,20">
-                    <Button Content="Finanças" Style="{StaticResource SidebarButtonStyle}" Click="FinanceButton_Click">
+
+                    <!-- Botão Finanças -->
+                    <Button Content="Finanças" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="FinanceButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -175,13 +197,18 @@
                                                   Fill="#3B82F6"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" 
+                                               VerticalAlignment="Center" 
+                                               Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Cartões" Style="{StaticResource SidebarButtonStyle}" Click="CardsButton_Click">
+                    <!-- Botão Cartões -->
+                    <Button Content="Cartões" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="CardsButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -191,14 +218,20 @@
                                                   Fill="#10B981"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" 
+                                               VerticalAlignment="Center" 
+                                               Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Despesas" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click"
-                            Background="#1E293B" Foreground="#3B82F6">
+                    <!-- Botão Despesas (página atual - destacado) -->
+                    <Button Content="Despesas" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="ExpensesButton_Click"
+                            Background="#1E293B" 
+                            Foreground="#3B82F6">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -210,13 +243,19 @@
                                                   Stroke="#EF4444" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#3B82F6" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding}" 
+                                               VerticalAlignment="Center" 
+                                               Foreground="#3B82F6" 
+                                               FontWeight="Bold"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Receitas" Style="{StaticResource SidebarButtonStyle}" Click="CreditsButton_Click">
+                    <!-- Botão Receitas -->
+                    <Button Content="Receitas" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="CreditsButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -228,13 +267,18 @@
                                                   Stroke="#F59E0B" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" 
+                                               VerticalAlignment="Center" 
+                                               Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
 
-                    <Button Content="Metas" Style="{StaticResource SidebarButtonStyle}" Click="GoalsButton_Click">
+                    <!-- Botão Metas -->
+                    <Button Content="Metas" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="GoalsButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -244,73 +288,106 @@
                                                   Stroke="#8B5CF6" StrokeThickness="2"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" 
+                                               VerticalAlignment="Center" 
+                                               Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
                 </StackPanel>
 
-                <!-- User Profile -->
-                <Border Grid.Row="2" Background="#334155" Margin="16" CornerRadius="16" Padding="16">
+                <!-- Perfil do usuário -->
+                <Border Grid.Row="2" 
+                        Background="#334155" 
+                        Margin="16" 
+                        CornerRadius="16" 
+                        Padding="16">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="40" Height="40" Fill="#64748B"/>
                         <StackPanel Margin="12,0,0,0">
-                            <TextBlock x:Name="UsuarioNomeText" Text="Usuário" FontWeight="SemiBold" Foreground="#F1F5F9"/>
-                            <TextBlock x:Name="UsuarioTipoText" Text="Premium" Foreground="#3B82F6" FontSize="11"/>
+                            <TextBlock x:Name="UsuarioNomeText" 
+                                       Text="Usuário" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="#F1F5F9"/>
+                            <TextBlock x:Name="UsuarioTipoText" 
+                                       Text="Premium" 
+                                       Foreground="#3B82F6" 
+                                       FontSize="11"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
             </Grid>
         </Border>
 
-        <!-- Main Content - Área de Gastos -->
-        <Border Grid.Column="1" Background="#0F172A" Padding="30">
+        <!-- Área de conteúdo principal - Despesas -->
+        <Border Grid.Column="1" 
+                Background="#0F172A" 
+                Padding="30">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Border Grid.Row="0" Background="#1E293B" CornerRadius="12" Padding="20" Margin="0,0,0,20">
+                <!-- Cabeçalho da página -->
+                <Border Grid.Row="0" 
+                        Background="#1E293B" 
+                        CornerRadius="12" 
+                        Padding="20" 
+                        Margin="0,0,0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="Gerenciar Gastos" 
-                                   FontSize="24" FontWeight="Bold" Foreground="#F1F5F9"
+                        <TextBlock Grid.Column="0" 
+                                   Text="Gerenciar Gastos" 
+                                   FontSize="24" 
+                                   FontWeight="Bold" 
+                                   Foreground="#F1F5F9"
                                    VerticalAlignment="Center"/>
 
-                        <Button Grid.Column="1" Content="Voltar para Dashboard" 
+                        <!-- Botão para voltar ao dashboard -->
+                        <Button Grid.Column="1" 
+                                Content="Voltar para Dashboard" 
                                 Style="{StaticResource ActionButtonStyle}"
                                 Click="BackToDashboard_Click"/>
                     </Grid>
                 </Border>
 
-                <!-- Conteúdo Principal -->
+                <!-- Conteúdo principal - Lista e formulário -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="400"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Lista de Gastos -->
-                    <Border Grid.Column="0" Background="#1E293B" CornerRadius="12" Padding="20" Margin="0,0,15,0">
+                    <!-- Lista de despesas registradas -->
+                    <Border Grid.Column="0" 
+                            Background="#1E293B" 
+                            CornerRadius="12" 
+                            Padding="20" 
+                            Margin="0,0,15,0">
                         <StackPanel>
                             <TextBlock Text="Gastos Registrados" 
-                   FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9"
-                   Margin="0,0,0,20"/>
+                                       FontSize="18" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="#F1F5F9"
+                                       Margin="0,0,0,20"/>
 
-                            <!-- Lista de gastos FUNCIONAL -->
+                            <!-- Lista scrollável de despesas -->
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
                                 <ItemsControl x:Name="DespesasItemsControl">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="#0F172A" CornerRadius="8" Padding="15" Margin="0,0,0,10"
-                                BorderBrush="#334155" BorderThickness="1">
+                                            <Border Background="#0F172A" 
+                                                    CornerRadius="8" 
+                                                    Padding="15" 
+                                                    Margin="0,0,0,10"
+                                                    BorderBrush="#334155" 
+                                                    BorderThickness="1">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
@@ -318,23 +395,41 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
 
+                                                    <!-- Detalhes da despesa -->
                                                     <StackPanel Grid.Column="0">
                                                         <TextBlock Text="{Binding DescricaoTransacao}" 
-                                               Foreground="#F1F5F9" FontWeight="SemiBold" FontSize="14"/>
+                                                                   Foreground="#F1F5F9" 
+                                                                   FontWeight="SemiBold" 
+                                                                   FontSize="14"/>
                                                         <TextBlock Text="{Binding CategoriaId}" 
-                                               Foreground="#94A3B8" FontSize="12" Margin="0,5,0,0"/>
+                                                                   Foreground="#94A3B8" 
+                                                                   FontSize="12" 
+                                                                   Margin="0,5,0,0"/>
                                                         <TextBlock Text="{Binding DataTransacao, StringFormat='dd/MM/yyyy'}" 
-                                               Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
+                                                                   Foreground="#64748B" 
+                                                                   FontSize="11" 
+                                                                   Margin="0,2,0,0"/>
                                                     </StackPanel>
 
-                                                    <TextBlock Grid.Column="1" Text="{Binding ValorTransacao, StringFormat='R$ {0:F2}'}" 
-                                           Foreground="#EF4444" FontWeight="Bold" FontSize="16"
-                                           VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                                    <!-- Valor da despesa (vermelho) -->
+                                                    <TextBlock Grid.Column="1" 
+                                                               Text="{Binding ValorTransacao, StringFormat='R$ {0:F2}'}" 
+                                                               Foreground="#EF4444" 
+                                                               FontWeight="Bold" 
+                                                               FontSize="16"
+                                                               VerticalAlignment="Center" 
+                                                               Margin="0,0,15,0"/>
 
-                                                    <Button Grid.Column="2" Content="✕" 
-                                        Background="Transparent" Foreground="#EF4444" FontSize="12"
-                                        Width="25" Height="25" Padding="0"
-                                        Click="RemoverDespesa_Click"/>
+                                                    <!-- Botão para remover despesa -->
+                                                    <Button Grid.Column="2" 
+                                                            Content="✕" 
+                                                            Background="Transparent" 
+                                                            Foreground="#EF4444" 
+                                                            FontSize="12"
+                                                            Width="25" 
+                                                            Height="25" 
+                                                            Padding="0"
+                                                            Click="RemoverDespesa_Click"/>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -342,36 +437,78 @@
                                 </ItemsControl>
                             </ScrollViewer>
 
-                            <!-- Ações em lote -->
-                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
-                                <Button Content="Exportar Relatório" Style="{StaticResource ActionButtonStyle}" Margin="0,0,10,0" Click="ExportReport_Click"/>
-                                <Button Content="Filtrar Gastos" Style="{StaticResource ActionButtonStyle}" Margin="0,0,10,0" Click="FilterExpenses_Click"/>
-                                <Button Content="Limpar Todos" Style="{StaticResource DangerButtonStyle}" Click="ClearAll_Click"/>
+                            <!-- Ações em lote para despesas -->
+                            <StackPanel Orientation="Horizontal" 
+                                        Margin="0,20,0,0" 
+                                        HorizontalAlignment="Center">
+                                <Button Content="Exportar Relatório" 
+                                        Style="{StaticResource ActionButtonStyle}" 
+                                        Margin="0,0,10,0"
+                                        Click="ExportReport_Click"/>
+                                <Button Content="Filtrar Gastos" 
+                                        Style="{StaticResource ActionButtonStyle}" 
+                                        Margin="0,0,10,0"
+                                        Click="FilterExpenses_Click"/>
+                                <Button Content="Limpar Todos" 
+                                        Style="{StaticResource DangerButtonStyle}" 
+                                        Click="ClearAll_Click"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Formulário de Novo Gasto -->
-                    <Border Grid.Column="1" Background="#1E293B" CornerRadius="12" Padding="20">
+                    <!-- Formulário para adicionar nova despesa -->
+                    <Border Grid.Column="1" 
+                            Background="#1E293B" 
+                            CornerRadius="12" 
+                            Padding="20">
                         <StackPanel>
                             <TextBlock Text="Adicionar Novo Gasto" 
-                                       FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9"
+                                       FontSize="18" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="#F1F5F9"
                                        Margin="0,0,0,20"/>
 
-                            <!-- Campos do formulário -->
+                            <!-- Campo: Descrição -->
                             <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Descrição" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="DescriptionTextBox" Background="#0F172A" Foreground="White" BorderThickness="0" Padding="10" FontSize="14"/>
+                                <TextBlock Text="Descrição" 
+                                           Foreground="#94A3B8" 
+                                           FontSize="12" 
+                                           Margin="0,0,0,5"/>
+                                <TextBox x:Name="DescriptionTextBox" 
+                                         Background="#0F172A" 
+                                         Foreground="White" 
+                                         BorderThickness="0" 
+                                         Padding="10" 
+                                         FontSize="14"/>
                             </StackPanel>
 
+                            <!-- Campo: Valor -->
                             <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Valor (R$)" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ValueTextBox" Background="#0F172A" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Text="0,00"/>
+                                <TextBlock Text="Valor (R$)" 
+                                           Foreground="#94A3B8" 
+                                           FontSize="12" 
+                                           Margin="0,0,0,5"/>
+                                <TextBox x:Name="ValueTextBox" 
+                                         Background="#0F172A" 
+                                         Foreground="White" 
+                                         BorderThickness="0" 
+                                         Padding="10" 
+                                         FontSize="14" 
+                                         Text="0,00"/>
                             </StackPanel>
 
+                            <!-- Campo: Categoria -->
                             <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Categoria" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="CategoryComboBox" Background="#0F172A" Foreground="black" BorderThickness="0" Padding="10" FontSize="14">
+                                <TextBlock Text="Categoria" 
+                                           Foreground="#94A3B8" 
+                                           FontSize="12" 
+                                           Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CategoryComboBox" 
+                                          Background="#0F172A" 
+                                          Foreground="black" 
+                                          BorderThickness="0" 
+                                          Padding="10" 
+                                          FontSize="14">
                                     <ComboBoxItem Content="Alimentação"/>
                                     <ComboBoxItem Content="Transporte"/>
                                     <ComboBoxItem Content="Moradia"/>
@@ -382,40 +519,89 @@
                                 </ComboBox>
                             </StackPanel>
 
+                            <!-- Campo: Data -->
                             <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Data" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="DateTextBox" Background="#0F172A" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" 
+                                <TextBlock Text="Data" 
+                                           Foreground="#94A3B8" 
+                                           FontSize="12" 
+                                           Margin="0,0,0,5"/>
+                                <TextBox x:Name="DateTextBox" 
+                                         Background="#0F172A" 
+                                         Foreground="White" 
+                                         BorderThickness="0" 
+                                         Padding="10" 
+                                         FontSize="14" 
                                          Text="{Binding Path=., Source={x:Static system:DateTime.Today}, StringFormat='dd/MM/yyyy'}"/>
                             </StackPanel>
 
+                            <!-- Campo: Tipo de Gasto -->
                             <StackPanel Margin="0,0,0,20">
-                                <TextBlock Text="Tipo de Gasto" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBlock Text="Tipo de Gasto" 
+                                           Foreground="#94A3B8" 
+                                           FontSize="12" 
+                                           Margin="0,0,0,5"/>
                                 <StackPanel Orientation="Horizontal">
-                                    <RadioButton x:Name="FixedRadio" Content="Fixo" Foreground="White" Margin="0,0,15,0" IsChecked="True"/>
-                                    <RadioButton x:Name="VariableRadio" Content="Variável" Foreground="White" Margin="0,0,15,0"/>
-                                    <RadioButton x:Name="EmergencyRadio" Content="Emergência" Foreground="White"/>
+                                    <RadioButton x:Name="FixedRadio" 
+                                                 Content="Fixo" 
+                                                 Foreground="White" 
+                                                 Margin="0,0,15,0" 
+                                                 IsChecked="True"/>
+                                    <RadioButton x:Name="VariableRadio" 
+                                                 Content="Variável" 
+                                                 Foreground="White" 
+                                                 Margin="0,0,15,0"/>
+                                    <RadioButton x:Name="EmergencyRadio" 
+                                                 Content="Emergência" 
+                                                 Foreground="White"/>
                                 </StackPanel>
                             </StackPanel>
 
-                            <!-- Botões de ação -->
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="Adicionar Gasto" Style="{StaticResource FormButtonStyle}" Margin="0,0,10,0"
+                            <!-- Botões de ação do formulário -->
+                            <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Center">
+                                <Button Content="Adicionar Gasto" 
+                                        Style="{StaticResource FormButtonStyle}" 
+                                        Margin="0,0,10,0"
                                         Click="AddExpense_Click"/>
-                                <Button Content="Planejar Futuro" Style="{StaticResource ActionButtonStyle}"
+                                <Button Content="Planejar Futuro" 
+                                        Style="{StaticResource ActionButtonStyle}"
                                         Click="PlanFutureExpense_Click"/>
                             </StackPanel>
 
-                            <!-- Planejamento futuro -->
-                            <Border x:Name="FuturePlanningPanel" Background="#0F172A" CornerRadius="8" Padding="15" 
-                                    Margin="0,20,0,0" Visibility="Collapsed">
+                            <!-- Seção de planejamento futuro (inicialmente oculta) -->
+                            <Border x:Name="FuturePlanningPanel" 
+                                    Background="#0F172A" 
+                                    CornerRadius="8" 
+                                    Padding="15" 
+                                    Margin="0,20,0,0" 
+                                    Visibility="Collapsed">
                                 <StackPanel>
-                                    <TextBlock Text="Planejar Gasto Futuro" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,10"/>
+                                    <TextBlock Text="Planejar Gasto Futuro" 
+                                               FontWeight="SemiBold" 
+                                               Foreground="#F1F5F9" 
+                                               Margin="0,0,0,10"/>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBox x:Name="FutureValueTextBox" Background="#1E293B" Foreground="White" BorderThickness="0" Padding="10" 
-                                                 FontSize="14" Width="120" Text="0,00" Margin="0,0,10,0"/>
-                                        <TextBox x:Name="FutureDateTextBox" Background="#1E293B" Foreground="White" BorderThickness="0" Padding="10" 
-                                                 FontSize="14" Width="120" Text="dd/MM/aaaa"/>
-                                        <Button Content="Salvar" Style="{StaticResource FormButtonStyle}" Margin="10,0,0,0" Click="SaveFuturePlan_Click"/>
+                                        <TextBox x:Name="FutureValueTextBox" 
+                                                 Background="#1E293B" 
+                                                 Foreground="White" 
+                                                 BorderThickness="0" 
+                                                 Padding="10" 
+                                                 FontSize="14" 
+                                                 Width="120" 
+                                                 Text="0,00" 
+                                                 Margin="0,0,10,0"/>
+                                        <TextBox x:Name="FutureDateTextBox" 
+                                                 Background="#1E293B" 
+                                                 Foreground="White" 
+                                                 BorderThickness="0" 
+                                                 Padding="10" 
+                                                 FontSize="14" 
+                                                 Width="120" 
+                                                 Text="dd/MM/aaaa"/>
+                                        <Button Content="Salvar" 
+                                                Style="{StaticResource FormButtonStyle}" 
+                                                Margin="10,0,0,0" 
+                                                Click="SaveFuturePlan_Click"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
