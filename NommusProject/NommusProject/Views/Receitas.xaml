@@ -6,38 +6,32 @@
         Height="700" 
         Width="1200"
         WindowStartupLocation="CenterScreen"
-        Background="#0F172A"
+        Background="#0A0F1E"
         WindowState="Maximized">
 
-    <!-- Recursos e estilos da aplicação -->
     <Window.Resources>
-
-        <!-- Estilo para botões da sidebar -->
+        <!-- ESTILO SIDEBAR - Botões maiores, nova cor azul escuro -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="#94A3B8"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Padding" Value="16,14"/>
+            <Setter Property="Height" Value="60"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" 
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="20"
-                                Margin="8,4">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              Margin="{TemplateBinding Padding}"/>
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="14" Margin="8,4">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1E293B"/>
+                                <Setter TargetName="border" Property="Background" Value="#1E2D5A"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter TargetName="border" Property="Background" Value="#243670"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -45,9 +39,9 @@
             </Setter>
         </Style>
 
-        <!-- Estilo para botões de ação -->
+        <!-- Estilo para botões de ação principais -->
         <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Background" Value="#1A2340"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="#E2E8F0"/>
             <Setter Property="FontSize" Value="13"/>
@@ -56,18 +50,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" 
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="12"
-                                BorderBrush="#334155"
-                                BorderThickness="1">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              Margin="{TemplateBinding Padding}"/>
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="12" BorderBrush="#2D3F6B" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter TargetName="border" Property="Background" Value="#243670"/>
                                 <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -87,14 +75,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" 
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="8"
-                                BorderBrush="#059669"
-                                BorderThickness="1">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              Margin="{TemplateBinding Padding}"/>
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" BorderBrush="#059669" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -107,18 +89,14 @@
         </Style>
     </Window.Resources>
 
-    <!-- Layout principal com sidebar e conteúdo -->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar de navegação -->
-        <Border Grid.Column="0" 
-                Background="#1E293B" 
-                BorderBrush="#334155" 
-                BorderThickness="0,0,1,0">
+        <!-- SIDEBAR -->
+        <Border Grid.Column="0" Background="#0D1B3E" BorderBrush="#1E2D5A" BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -126,15 +104,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logo e nome da aplicação -->
-                <StackPanel Grid.Row="0" 
-                            Margin="20,30" 
-                            Orientation="Horizontal" 
-                            HorizontalAlignment="Left">
+                <!-- Logo -->
+                <StackPanel Grid.Row="0" Margin="20,30" Orientation="Horizontal" HorizontalAlignment="Left">
                     <Viewbox Width="40" Height="40">
                         <Canvas Width="24" Height="24">
-                            <Path Data="M3,12 L7,8 L11,14 L15,10 L19,16 L21,12" 
-                                  Stroke="#3B82F6" StrokeThickness="2"/>
+                            <Path Data="M3,12 L7,8 L11,14 L15,10 L19,16 L21,12" Stroke="#3B82F6" StrokeThickness="2"/>
                             <Ellipse Canvas.Left="2" Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
                             <Ellipse Canvas.Left="6" Canvas.Top="7" Width="2" Height="2" Fill="#3B82F6"/>
                             <Ellipse Canvas.Left="10" Canvas.Top="13" Width="2" Height="2" Fill="#3B82F6"/>
@@ -143,438 +117,247 @@
                             <Ellipse Canvas.Left="20" Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
                         </Canvas>
                     </Viewbox>
-                    <TextBlock Text="Nommus" 
-                               FontSize="24" 
-                               FontWeight="Bold" 
-                               Foreground="#F1F5F9" 
-                               VerticalAlignment="Center" 
-                               Margin="12,0,0,0"/>
+                    <TextBlock Text="Nommus" FontSize="24" FontWeight="Bold" Foreground="#F1F5F9" VerticalAlignment="Center" Margin="12,0,0,0"/>
                 </StackPanel>
 
-                <!-- Menu de navegação -->
+                <!-- Menu -->
                 <StackPanel Grid.Row="1" Margin="10,20">
-
-                    <!-- Botão Finanças -->
-                    <Button Content="Finanças" 
-                            Style="{StaticResource SidebarButtonStyle}" 
-                            Click="FinanceButton_Click">
+                    <Button Content="Finanças" Style="{StaticResource SidebarButtonStyle}" Click="FinanceButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M2,2 L14,2 L14,14 L2,14 Z M4,4 L12,4 L12,12 L4,12 Z M6,6 L10,6 L10,10 L6,10 Z" 
-                                                  Fill="#3B82F6"/>
+                                            <Path Data="M2,2 L14,2 L14,14 L2,14 Z M4,4 L12,4 L12,12 L4,12 Z M6,6 L10,6 L10,10 L6,10 Z" Fill="#3B82F6"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
-
-                    <!-- Botão Cartões -->
-                    <Button Content="Cartões" 
-                            Style="{StaticResource SidebarButtonStyle}" 
-                            Click="CardsButton_Click">
+                    <Button Content="Cartões" Style="{StaticResource SidebarButtonStyle}" Click="CardsButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M2,4 L14,4 L14,12 L2,12 Z M4,6 L12,6 L12,10 L4,10 Z M6,8 L10,8" 
-                                                  Fill="#10B981"/>
+                                            <Path Data="M2,4 L14,4 L14,12 L2,12 Z M4,6 L12,6 L12,10 L4,10 Z M6,8 L10,8" Fill="#10B981"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
-
-                    <!-- Botão Despesas -->
-                    <Button Content="Despesas" 
-                            Style="{StaticResource SidebarButtonStyle}" 
-                            Click="ExpensesButton_Click">
+                    <Button Content="Despesas" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M8,2 L8,14 M2,8 L14,8" 
-                                                  Stroke="#EF4444" StrokeThickness="2"/>
-                                            <Path Data="M4,4 L12,12 M12,4 L4,12" 
-                                                  Stroke="#EF4444" StrokeThickness="1"/>
+                                            <Path Data="M8,2 L8,14 M2,8 L14,8" Stroke="#EF4444" StrokeThickness="2"/>
+                                            <Path Data="M4,4 L12,12 M12,4 L4,12" Stroke="#EF4444" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
-
-                    <!-- Botão Receitas (página atual) -->
-                    <Button Content="Receitas" 
-                            Style="{StaticResource SidebarButtonStyle}" 
-                            Click="IncomeButton_Click">
+                    <Button Content="Receitas" Style="{StaticResource SidebarButtonStyle}" Click="IncomeButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M8,2 L8,14 M2,8 L14,8" 
-                                                  Stroke="#F59E0B" StrokeThickness="2"/>
-                                            <Path Data="M5,5 L11,11 M11,5 L5,11" 
-                                                  Stroke="#F59E0B" StrokeThickness="1"/>
+                                            <Path Data="M8,2 L8,14 M2,8 L14,8" Stroke="#F59E0B" StrokeThickness="2"/>
+                                            <Path Data="M5,5 L11,11 M11,5 L5,11" Stroke="#F59E0B" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
-
-                    <!-- Botão Metas -->
-                    <Button Content="Metas" 
-                            Style="{StaticResource SidebarButtonStyle}" 
-                            Click="GoalsButton_Click">
+                    <Button Content="Metas" Style="{StaticResource SidebarButtonStyle}" Click="GoalsButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M2,8 L6,12 L14,4" 
-                                                  Stroke="#8B5CF6" StrokeThickness="2"/>
+                                            <Path Data="M2,8 L6,12 L14,4" Stroke="#8B5CF6" StrokeThickness="2"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
                 </StackPanel>
 
-                <!-- Perfil do usuário -->
-                <Border Grid.Row="2" 
-                        Background="#334155" 
-                        Margin="16" 
-                        CornerRadius="16" 
-                        Padding="16">
+                <!-- CARD DO USUÁRIO -->
+                <Border Grid.Row="2" x:Name="UserCardSidebar" Background="#1A2340" Margin="12,0,12,16" CornerRadius="16" Padding="14" Cursor="Hand" MouseLeftButtonDown="UsuarioCard_Click">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="8" Opacity="0.3" ShadowDepth="2"/>
+                    </Border.Effect>
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="40" Height="40" Fill="#64748B"/>
-                        <StackPanel Margin="12,0,0,0">
-                            <TextBlock x:Name="UsuarioNomeText" 
-                                       Text="Usuário" 
-                                       FontWeight="SemiBold" 
-                                       Foreground="#F1F5F9"/>
-                            <TextBlock x:Name="UsuarioTipoText" 
-                                       Text="Premium" 
-                                       Foreground="#3B82F6" 
-                                       FontSize="11"/>
+                        <Ellipse Width="40" Height="40" Fill="#2D4A8A"/>
+                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="UsuarioNomeText" Text="Usuário" FontWeight="SemiBold" FontSize="18" Foreground="#F1F5F9"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
             </Grid>
         </Border>
 
-        <!-- Área de conteúdo principal - Receitas -->
-        <Border Grid.Column="1" 
-                Background="#0F172A" 
-                Padding="30">
+        <!-- CONTEÚDO PRINCIPAL -->
+        <Border Grid.Column="1" Background="#0A0F1E" Padding="30">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Cabeçalho da página -->
-                <Border Grid.Row="0" 
-                        Background="#1E293B" 
-                        CornerRadius="12" 
-                        Padding="20" 
-                        Margin="0,0,0,20">
+                <!-- Cabeçalho -->
+                <Border Grid.Row="0" Background="#111827" CornerRadius="12" Padding="20" Margin="0,0,0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" 
-                                   Text="Gerenciar Receitas" 
-                                   FontSize="24" 
-                                   FontWeight="Bold" 
-                                   Foreground="#F1F5F9"
-                                   VerticalAlignment="Center"/>
-
-                        <!-- Botão para voltar ao dashboard -->
-                        <Button Grid.Column="1" 
-                                Content="Voltar para Dashboard" 
-                                Style="{StaticResource ActionButtonStyle}"
-                                Click="BackToDashboard_Click"/>
+                        <TextBlock Text="Gerenciar Receitas" FontSize="24" FontWeight="Bold" Foreground="#F1F5F9" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" Content="Voltar para Dashboard" Style="{StaticResource ActionButtonStyle}" Click="BackToDashboard_Click"/>
                     </Grid>
                 </Border>
 
-                <!-- Conteúdo principal - Lista e formulário -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="400"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Lista de receitas registradas -->
-                    <Border Grid.Column="0" 
-                            Background="#1E293B" 
-                            CornerRadius="12" 
-                            Padding="20" 
-                            Margin="0,0,15,0">
+                    <!-- LISTA DE RECEITAS -->
+                    <Border Grid.Column="0" Background="#111827" CornerRadius="12" Padding="20" Margin="0,0,15,0">
                         <StackPanel>
-                            <TextBlock Text="Receitas Registradas" 
-                                       FontSize="18" 
-                                       FontWeight="SemiBold" 
-                                       Foreground="#F1F5F9"
-                                       Margin="0,0,0,20"/>
-
-                            <!-- Lista scrollável de receitas -->
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
+                            <TextBlock Text="Receitas Registradas" FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,20"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="350">
                                 <ItemsControl x:Name="ReceitasItemsControl">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="#0F172A" 
-                                                    CornerRadius="8" 
-                                                    Padding="15" 
-                                                    Margin="0,0,0,10"
-                                                    BorderBrush="#334155" 
-                                                    BorderThickness="1">
+                                            <Border Background="#0A0F1E" CornerRadius="8" Padding="15" Margin="0,0,0,10" BorderBrush="#1E2D5A" BorderThickness="1">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-
-                                                    <!-- Detalhes da receita -->
                                                     <StackPanel Grid.Column="0">
-                                                        <TextBlock Text="{Binding DescricaoTransacao}" 
-                                                                   Foreground="#F1F5F9" 
-                                                                   FontWeight="SemiBold" 
-                                                                   FontSize="14"/>
-                                                        <TextBlock Text="{Binding FonteReceita}" 
-                                                                   Foreground="#94A3B8" 
-                                                                   FontSize="12" 
-                                                                   Margin="0,5,0,0"/>
-                                                        <TextBlock Text="{Binding DataTransacao, StringFormat='dd/MM/yyyy'}" 
-                                                                   Foreground="#64748B" 
-                                                                   FontSize="11" 
-                                                                   Margin="0,2,0,0"/>
+                                                        <TextBlock Text="{Binding DescricaoTransacao}" Foreground="#F1F5F9" FontWeight="SemiBold" FontSize="14"/>
+                                                        <TextBlock Text="{Binding FonteReceita}" Foreground="#94A3B8" FontSize="12" Margin="0,5,0,0"/>
+                                                        <TextBlock Text="{Binding DataTransacao, StringFormat='dd/MM/yyyy'}" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
                                                     </StackPanel>
-
-                                                    <!-- Valor da receita -->
-                                                    <TextBlock Grid.Column="1" 
-                                                               Text="{Binding ValorTransacao, StringFormat='R$ {0:F2}'}" 
-                                                               Foreground="#10B981" 
-                                                               FontWeight="Bold" 
-                                                               FontSize="16"
-                                                               VerticalAlignment="Center" 
-                                                               Margin="0,0,15,0"/>
-
-                                                    <!-- Botão para remover receita -->
-                                                    <Button Grid.Column="2" 
-                                                            Content="✕" 
-                                                            Background="Transparent" 
-                                                            Foreground="#EF4444" 
-                                                            FontSize="12"
-                                                            Width="25" 
-                                                            Height="25" 
-                                                            Padding="0"
-                                                            Click="RemoverReceita_Click"
-                                                            Tag="{Binding Id}"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding ValorTransacao, StringFormat='R$ {0:F2}'}" Foreground="#10B981" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                                    <Button Grid.Column="2" Content="✕" Background="Transparent" Foreground="#EF4444" FontSize="12" Width="25" Height="25" Click="RemoverReceita_Click" Tag="{Binding Id}"/>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </ScrollViewer>
-
-                            <!-- Ações em lote para receitas -->
-                            <StackPanel Orientation="Horizontal" 
-                                        Margin="0,20,0,0" 
-                                        HorizontalAlignment="Center">
-                                <Button Content="Exportar Relatório" 
-                                        Style="{StaticResource ActionButtonStyle}" 
-                                        Margin="0,0,10,0"/>
-                                <Button Content="Filtrar Receitas" 
-                                        Style="{StaticResource ActionButtonStyle}" 
-                                        Margin="0,0,10,0"/>
-                                <Button Content="Previsão Futura" 
-                                        Style="{StaticResource ActionButtonStyle}" 
-                                        Background="#10B981"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
+                                <Button Content="Exportar Relatório" Style="{StaticResource ActionButtonStyle}" Margin="0,0,10,0"/>
+                                <Button Content="Previsão Futura" Style="{StaticResource ActionButtonStyle}" Background="#10B981" Click="PlanFutureIncome_Click"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Formulário para adicionar nova receita -->
-                    <Border Grid.Column="1" 
-                            Background="#1E293B" 
-                            CornerRadius="12" 
-                            Padding="20">
+                    <!-- FORMULÁRIO -->
+                    <Border Grid.Column="1" Background="#111827" CornerRadius="12" Padding="20">
                         <StackPanel>
-                            <TextBlock Text="Adicionar Nova Receita" 
-                                       FontSize="18" 
-                                       FontWeight="SemiBold" 
-                                       Foreground="#F1F5F9"
-                                       Margin="0,0,0,20"/>
+                            <TextBlock Text="Adicionar Nova Receita" FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,20"/>
 
-                            <!-- Campo: Descrição -->
-                            <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Descrição" 
-                                           Foreground="#94A3B8" 
-                                           FontSize="12" 
-                                           Margin="0,0,0,5"/>
-                                <TextBox x:Name="DescriptionTextBox" 
-                                         Background="#0F172A" 
-                                         Foreground="White" 
-                                         BorderThickness="0" 
-                                         Padding="10" 
-                                         FontSize="14"/>
+                            <TextBlock Text="Descrição" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                            <TextBox x:Name="DescriptionTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Valor (R$ )" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                            <TextBox x:Name="ValueTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Text="0,00" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Categoria" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                            <ComboBox x:Name="CategoryComboBox" Background="#0A0F1E" Foreground="Black" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15">
+                                <ComboBoxItem Content="Salário"/>
+                                <ComboBoxItem Content="Freelance"/>
+                                <ComboBoxItem Content="Investimentos"/>
+                                <ComboBoxItem Content="Outros"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Data" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                            <TextBox x:Name="DateTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15" Text="{Binding Path=., Source={x:Static system:DateTime.Today}, StringFormat='dd/MM/yyyy'}"/>
+
+                            <TextBlock Text="Tipo de Receita" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <RadioButton x:Name="FixedRadio" Content="Fixa" Foreground="White" Margin="0,0,15,0" IsChecked="True"/>
+                                <RadioButton x:Name="VariableRadio" Content="Variável" Foreground="White" Margin="0,0,15,0"/>
+                                <RadioButton x:Name="ExtraRadio" Content="Extra" Foreground="White"/>
                             </StackPanel>
 
-                            <!-- Campo: Valor -->
-                            <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Valor (R$)" 
-                                           Foreground="#94A3B8" 
-                                           FontSize="12" 
-                                           Margin="0,0,0,5"/>
-                                <TextBox x:Name="ValueTextBox" 
-                                         Background="#0F172A" 
-                                         Foreground="White" 
-                                         BorderThickness="0" 
-                                         Padding="10" 
-                                         FontSize="14" 
-                                         Text="0,00"/>
-                            </StackPanel>
+                            <Button Content="Adicionar Receita" Style="{StaticResource FormButtonStyle}" Click="AddIncome_Click" Margin="0,0,0,10"/>
 
-                            <!-- Campo: Categoria -->
-                            <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Categoria" 
-                                           Foreground="#94A3B8" 
-                                           FontSize="12" 
-                                           Margin="0,0,0,5"/>
-                                <ComboBox x:Name="CategoryComboBox" 
-                                          Background="#0F172A" 
-                                          Foreground="black" 
-                                          BorderThickness="0" 
-                                          Padding="10" 
-                                          FontSize="14">
-                                    <ComboBoxItem Content="Salário"/>
-                                    <ComboBoxItem Content="Freelance"/>
-                                    <ComboBoxItem Content="Investimentos"/>
-                                    <ComboBoxItem Content="Aluguel"/>
-                                    <ComboBoxItem Content="Vendas"/>
-                                    <ComboBoxItem Content="Bônus"/>
-                                    <ComboBoxItem Content="Outros"/>
-                                </ComboBox>
-                            </StackPanel>
-
-                            <!-- Campo: Data -->
-                            <StackPanel Margin="0,0,0,15">
-                                <TextBlock Text="Data" 
-                                           Foreground="#94A3B8" 
-                                           FontSize="12" 
-                                           Margin="0,0,0,5"/>
-                                <TextBox x:Name="DateTextBox" 
-                                         Background="#0F172A" 
-                                         Foreground="White" 
-                                         BorderThickness="0" 
-                                         Padding="10" 
-                                         FontSize="14" 
-                                         Text="{Binding Path=., Source={x:Static system:DateTime.Today}, StringFormat='dd/MM/yyyy'}"/>
-                            </StackPanel>
-
-                            <!-- Campo: Tipo de Receita -->
-                            <StackPanel Margin="0,0,0,20">
-                                <TextBlock Text="Tipo de Receita" 
-                                           Foreground="#94A3B8" 
-                                           FontSize="12" 
-                                           Margin="0,0,0,5"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <RadioButton x:Name="FixedRadio" 
-                                                 Content="Fixa" 
-                                                 Foreground="White" 
-                                                 Margin="0,0,15,0" 
-                                                 IsChecked="True"/>
-                                    <RadioButton x:Name="VariableRadio" 
-                                                 Content="Variável" 
-                                                 Foreground="White" 
-                                                 Margin="0,0,15,0"/>
-                                    <RadioButton x:Name="ExtraRadio" 
-                                                 Content="Extra" 
-                                                 Foreground="White"/>
-                                </StackPanel>
-                            </StackPanel>
-
-                            <!-- Botões de ação do formulário -->
-                            <StackPanel Orientation="Horizontal" 
-                                        HorizontalAlignment="Center">
-                                <Button Content="Adicionar Receita" 
-                                        Style="{StaticResource FormButtonStyle}" 
-                                        Margin="0,0,10,0"
-                                        Click="AddIncome_Click"/>
-                                <Button Content="Planejar Futuro" 
-                                        Style="{StaticResource ActionButtonStyle}"
-                                        Click="PlanFutureIncome_Click"/>
-                            </StackPanel>
-
-                            <!-- Seção de planejamento futuro (inicialmente oculta) -->
-                            <Border x:Name="FuturePlanningPanel" 
-                                    Background="#0F172A" 
-                                    CornerRadius="8" 
-                                    Padding="15" 
-                                    Margin="0,20,0,0" 
-                                    Visibility="Collapsed">
+                            <!-- Painel Futuro -->
+                            <Border x:Name="FuturePlanningPanel" Background="#0A0F1E" CornerRadius="8" Padding="15" Visibility="Collapsed">
                                 <StackPanel>
-                                    <TextBlock Text="Planejar Receita Futura" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="#F1F5F9" 
-                                               Margin="0,0,0,10"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox x:Name="FutureValueTextBox" 
-                                                 Background="#1E293B" 
-                                                 Foreground="White" 
-                                                 BorderThickness="0" 
-                                                 Padding="10" 
-                                                 FontSize="14" 
-                                                 Width="120" 
-                                                 Text="0,00" 
-                                                 Margin="0,0,10,0"/>
-                                        <TextBox x:Name="FutureDateTextBox" 
-                                                 Background="#1E293B" 
-                                                 Foreground="White" 
-                                                 BorderThickness="0" 
-                                                 Padding="10" 
-                                                 FontSize="14" 
-                                                 Width="120" 
-                                                 Text="dd/MM/aaaa"/>
-                                        <Button Content="Salvar" 
-                                                Style="{StaticResource FormButtonStyle}" 
-                                                Margin="10,0,0,0" 
-                                                Click="SaveFuturePlan_Click"/>
-                                    </StackPanel>
+                                    <TextBlock Text="Planejar Receita Futura" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,10"/>
+                                    <TextBox x:Name="FutureValueTextBox" Background="#111827" Foreground="White" BorderThickness="0" Padding="10" Margin="0,0,0,10" Text="0,00"/>
+                                    <Button Content="Salvar Plano" Style="{StaticResource FormButtonStyle}" Click="SaveFuturePlan_Click"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
                     </Border>
                 </Grid>
             </Grid>
+        </Border>
+
+        <!-- POPUP E OVERLAY -->
+        <Rectangle x:Name="PopupOverlay" Grid.ColumnSpan="2" Fill="Transparent" Panel.ZIndex="10" Visibility="Collapsed" MouseLeftButtonDown="FecharPopup_Click"/>
+        <Border x:Name="UserPopupCard" Grid.Column="0" Panel.ZIndex="11" Visibility="Collapsed" Background="#0F1E45" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="16" Margin="12,0,12,80" VerticalAlignment="Bottom">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="24" Opacity="0.6" ShadowDepth="4"/>
+            </Border.Effect>
+            <StackPanel Margin="16,16,16,12">
+                <TextBlock Text="Conta" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                    <Ellipse Width="44" Height="44" Fill="#1E3A8A" Stroke="#3B82F6" StrokeThickness="2"/>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="PopupNomeText" Text="Usuário" FontSize="14" FontWeight="SemiBold" Foreground="#F1F5F9"/>
+                        <TextBlock x:Name="PopupEmailText" Text="email@exemplo.com" FontSize="11" Foreground="#64748B"/>
+                    </StackPanel>
+                </StackPanel>
+                <Rectangle Height="1" Fill="#1E2D5A" Margin="0,0,0,12"/>
+                <Button x:Name="BtnConfiguracoes" Height="44" Margin="0,0,0,8" Cursor="Hand" Click="PopupConfiguracoes_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="brdConfig" Background="#0D1B3E" CornerRadius="10" BorderBrush="#1E3A8A" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal" Margin="14,0" VerticalAlignment="Center">
+                                    <TextBlock Text="⚙" Foreground="#3B82F6" FontSize="15" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Configurações" Foreground="#E2E8F0" FontSize="13" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="BtnLogout" Height="44" Cursor="Hand" Click="PopupLogout_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="brdLogout" Background="#1F0A0A" CornerRadius="10" BorderBrush="#7F1D1D" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal" Margin="14,0" VerticalAlignment="Center">
+                                    <TextBlock Text="→" Foreground="#EF4444" FontSize="15" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Fazer Logout" Foreground="#EF4444" FontSize="13" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>

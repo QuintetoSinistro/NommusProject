@@ -145,5 +145,10 @@ namespace NommusProject.Data
                 saldoDisponivel = reader.GetDouble(7)
             };
         }
+
+        internal Usuarios BuscarPorEmailESenha(string email, string senha)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

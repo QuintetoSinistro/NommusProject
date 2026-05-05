@@ -15,9 +15,9 @@
         <!-- Fundo com gradiente azul -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#0f132e" Offset="0.0"/>
-                <GradientStop Color="#19274e" Offset="0.5"/>
-                <GradientStop Color="#536d88" Offset="0.8"/>
+                <GradientStop Color="#1e1760" Offset="0.2"/>
+                <GradientStop Color="#1b24a1" Offset="0.6"/>
+                <GradientStop Color="#5e17eb" Offset="0.8"/>
             </LinearGradientBrush>
         </Grid.Background>
 
