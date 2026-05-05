@@ -1,15 +1,19 @@
 ﻿using Nommus;
+using NommusProject.Data;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace NommusProject
 {
     public partial class IncomeWindow : Window
     {
         private ObservableCollection<Transacao> _receitasCollection;
+        private readonly TransacaoRepository _transacaoRepo = new TransacaoRepository();
+        private readonly UsuarioRepository _usuarioRepo = new UsuarioRepository();
 
         public IncomeWindow()
         {
@@ -53,16 +57,13 @@ namespace NommusProject
             switch (usuario.Tipo)
             {
                 case TipoUsuario.Basic:
-                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(59, 130, 246)); // Azul
+                    UsuarioTipoText.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246)); // Azul
                     break;
                 case TipoUsuario.Premium:
-                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(245, 158, 11)); // Dourado
+                    UsuarioTipoText.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Dourado
                     break;
                 case TipoUsuario.Adm:
-                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(239, 68, 68)); // Vermelho
+                    UsuarioTipoText.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Vermelho
                     break;
             }
         }
@@ -84,7 +85,7 @@ namespace NommusProject
         }
 
         // Adiciona uma nova receita
-        private async void AddIncome_Click(object sender, RoutedEventArgs e)
+        private void AddIncome_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidarCamposReceita())
                 return;
@@ -94,9 +95,9 @@ namespace NommusProject
                 var (valor, categoria, tipoReceita, data) = ProcessarDadosFormulario();
                 var receita = CriarNovaReceita(valor, categoria, tipoReceita, data);
 
-                await SalvarReceita(receita);
+                SalvarReceita(receita);
                 LimparFormulario();
-                AtualizarListaReceitas(receita);
+                _receitasCollection.Insert(0, receita);
             }
             catch (FormatException)
             {
@@ -168,20 +169,20 @@ namespace NommusProject
         }
 
         // Salva a receita e atualiza o saldo do usuário
-        private async System.Threading.Tasks.Task SalvarReceita(Receita receita)
+        private void SalvarReceita(Receita receita)
         {
             double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
 
-            // Adiciona a transação e atualiza o saldo
-            await receita.AdicionarTransacaoAsync();
+            // Adiciona a transação
+            int id = _transacaoRepo.Add(receita);
+            receita.IdTransacao = id;
 
-            // Recarrega usuário atualizado do arquivo
-            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
-            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
+            // Atualiza saldo (soma o valor)
+            _usuarioRepo.AtualizarSaldo(SessaoUsuario.UsuarioLogado.Id, receita.ValorTransacao, adicionar: true);
 
             MessageBox.Show($"Receita adicionada com sucesso!\n" +
                            $"Saldo antes: R$ {saldoAntes:F2}\n" +
-                           $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
+                           $"Saldo atual: R$ {SessaoUsuario.UsuarioLogado.saldoDisponivel:F2}",
                            "Sucesso",
                            MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -196,24 +197,14 @@ namespace NommusProject
             DateTextBox.Text = DateTime.Today.ToString("dd/MM/yyyy");
         }
 
-        // Adiciona a nova receita na lista
-        private void AtualizarListaReceitas(Receita receita)
-        {
-            _receitasCollection.Insert(0, receita);
-        }
-
         // Carrega a lista de receitas do usuário
-        private async void CarregarReceitas()
+        private void CarregarReceitas()
         {
             try
             {
                 if (SessaoUsuario.UsuarioLogado != null)
                 {
-                    var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
-                    var receitas = transacoes.Where(t => t.TipoTransacao == "Receita")
-                                           .OrderByDescending(r => r.DataTransacao)
-                                           .ToList();
-
+                    var receitas = _transacaoRepo.GetByUsuarioAndTipo(SessaoUsuario.UsuarioLogado.Id, "Receita");
                     AtualizarListaReceitasUI(receitas);
                     ConfigurarMensagemListaVazia(receitas.Any());
                 }
@@ -268,8 +259,7 @@ namespace NommusProject
             var emptyText = new TextBlock
             {
                 Text = "Nenhuma receita registrada ainda...",
-                Foreground = new System.Windows.Media.SolidColorBrush(
-                    System.Windows.Media.Color.FromRgb(148, 163, 184)),
+                Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
                 FontSize = 14,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -279,7 +269,7 @@ namespace NommusProject
         }
 
         // Remove uma receita
-        private async void RemoverReceita_Click(object sender, RoutedEventArgs e)
+        private void RemoverReceita_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is Transacao transacao)
             {
@@ -292,7 +282,7 @@ namespace NommusProject
 
                     if (resultado == MessageBoxResult.Yes)
                     {
-                        await ExcluirReceita(transacao);
+                        ExcluirReceita(transacao);
                     }
                 }
                 catch (Exception ex)
@@ -304,23 +294,21 @@ namespace NommusProject
         }
 
         // Exclui uma receita e atualiza o saldo
-        private async System.Threading.Tasks.Task ExcluirReceita(Transacao transacao)
+        private void ExcluirReceita(Transacao transacao)
         {
             double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
 
-            // Remove a transação e atualiza o saldo
-            await transacao.ExcluirTransacaoAsync();
-
-            // Recarrega usuário atualizado do arquivo
-            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
-            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
+            // Remove a transação
+            _transacaoRepo.Delete(transacao.IdTransacao);
+            // Subtrai o valor do saldo (pois era uma receita)
+            _usuarioRepo.AtualizarSaldo(SessaoUsuario.UsuarioLogado.Id, transacao.ValorTransacao, adicionar: false);
 
             // Recarrega a lista
             CarregarReceitas();
 
             MessageBox.Show($"Receita removida com sucesso!\n" +
                           $"Saldo antes: R$ {saldoAntes:F2}\n" +
-                          $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
+                          $"Saldo atual: R$ {SessaoUsuario.UsuarioLogado.saldoDisponivel:F2}",
                           "Sucesso",
                           MessageBoxButton.OK, MessageBoxImage.Information);
         }
