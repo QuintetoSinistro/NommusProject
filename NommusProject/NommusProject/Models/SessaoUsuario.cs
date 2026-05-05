@@ -4,7 +4,7 @@ namespace NommusProject
 {
     public static class SessaoUsuario
     {
-        public static Usuario UsuarioLogado { get; set; }
+        public static Usuarios UsuarioLogado { get; set; }
 
         public static bool EstaLogado => UsuarioLogado != null;
 
