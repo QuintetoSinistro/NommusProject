@@ -6,38 +6,38 @@
         Height="700" 
         Width="1200"
         WindowStartupLocation="CenterScreen"
-        Background="#0F172A"
+        Background="#0A0F1E"
         WindowState="Maximized">
 
-    <!-- Recursos e estilos da aplicação -->
     <Window.Resources>
 
-        <!-- Estilo para botões da sidebar -->
+        <!-- ESTILO SIDEBAR - Botões maiores, nova cor azul escuro -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="#94A3B8"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Padding" Value="16,14"/>
+            <Setter Property="Height" Value="60"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="border" 
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="20"
+                                CornerRadius="14"
                                 Margin="8,4">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              VerticalAlignment="Center"
                                               Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1E293B"/>
+                                <Setter TargetName="border" Property="Background" Value="#1E2D5A"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter TargetName="border" Property="Background" Value="#243670"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -47,7 +47,7 @@
 
         <!-- Estilo para botões de ação principais -->
         <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Background" Value="#1A2340"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="#E2E8F0"/>
             <Setter Property="FontSize" Value="13"/>
@@ -59,7 +59,7 @@
                         <Border x:Name="border" 
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="12"
-                                BorderBrush="#334155"
+                                BorderBrush="#2D3F6B"
                                 BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
@@ -67,7 +67,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter TargetName="border" Property="Background" Value="#243670"/>
                                 <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -76,49 +76,19 @@
             </Setter>
         </Style>
 
-        <!-- Estilo para botões em popups -->
-        <Style x:Key="PopupButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#1E293B"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="#E2E8F0"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="15,12"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" 
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="8"
-                                BorderBrush="#334155"
-                                BorderThickness="1">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              Margin="{TemplateBinding Padding}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#334155"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
-    <!-- Layout principal com sidebar e conteúdo -->
+    <!-- Layout principal -->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar de navegação -->
+        <!-- SIDEBAR -->
         <Border Grid.Column="0" 
-                Background="#1E293B" 
-                BorderBrush="#334155" 
+                Background="#0D1B3E"
+                BorderBrush="#1E2D5A" 
                 BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
@@ -127,7 +97,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logo e nome da aplicação -->
+                <!-- Logo -->
                 <StackPanel Grid.Row="0" 
                             Margin="20,30" 
                             Orientation="Horizontal" 
@@ -136,10 +106,10 @@
                         <Canvas Width="24" Height="24">
                             <Path Data="M3,12 L7,8 L11,14 L15,10 L19,16 L21,12" 
                                   Stroke="#3B82F6" StrokeThickness="2"/>
-                            <Ellipse Canvas.Left="2" Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
-                            <Ellipse Canvas.Left="6" Canvas.Top="7" Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="2"  Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="6"  Canvas.Top="7"  Width="2" Height="2" Fill="#3B82F6"/>
                             <Ellipse Canvas.Left="10" Canvas.Top="13" Width="2" Height="2" Fill="#3B82F6"/>
-                            <Ellipse Canvas.Left="14" Canvas.Top="9" Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="14" Canvas.Top="9"  Width="2" Height="2" Fill="#3B82F6"/>
                             <Ellipse Canvas.Left="18" Canvas.Top="15" Width="2" Height="2" Fill="#3B82F6"/>
                             <Ellipse Canvas.Left="20" Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
                         </Canvas>
@@ -162,15 +132,12 @@
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M2,2 L14,2 L14,14 L2,14 Z M4,4 L12,4 L12,12 L4,12 Z M6,6 L10,6 L10,10 L6,10 Z" 
-                                                  Fill="#3B82F6"/>
+                                            <Path Data="M2,2 L14,2 L14,14 L2,14 Z M4,4 L12,4 L12,12 L4,12 Z M6,6 L10,6 L10,10 L6,10 Z" Fill="#3B82F6"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
@@ -183,38 +150,31 @@
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M2,4 L14,4 L14,12 L2,12 Z M4,6 L12,6 L12,10 L4,10 Z M6,8 L10,8" 
-                                                  Fill="#10B981"/>
+                                            <Path Data="M2,4 L14,4 L14,12 L2,12 Z M4,6 L12,6 L12,10 L4,10 Z M6,8 L10,8" Fill="#10B981"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
 
                     <!-- Botão Despesas -->
-                    <Button Content="Desepesas" 
+                    <Button Content="Despesas" 
                             Style="{StaticResource SidebarButtonStyle}" 
                             Click="ExpensesButton_Click">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M8,2 L8,14 M2,8 L14,8" 
-                                                  Stroke="#EF4444" StrokeThickness="2"/>
-                                            <Path Data="M4,4 L12,12 M12,4 L4,12" 
-                                                  Stroke="#EF4444" StrokeThickness="1"/>
+                                            <Path Data="M8,2 L8,14 M2,8 L14,8" Stroke="#EF4444" StrokeThickness="2"/>
+                                            <Path Data="M4,4 L12,12 M12,4 L4,12" Stroke="#EF4444" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
@@ -227,17 +187,13 @@
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M8,2 L8,14 M2,8 L14,8" 
-                                                  Stroke="#F59E0B" StrokeThickness="2"/>
-                                            <Path Data="M5,5 L11,11 M11,5 L5,11" 
-                                                  Stroke="#F59E0B" StrokeThickness="1"/>
+                                            <Path Data="M8,2 L8,14 M2,8 L14,8" Stroke="#F59E0B" StrokeThickness="2"/>
+                                            <Path Data="M5,5 L11,11 M11,5 L5,11" Stroke="#F59E0B" StrokeThickness="1"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
@@ -250,47 +206,53 @@
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,12,0">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
                                         <Canvas Width="16" Height="16">
-                                            <Path Data="M2,8 L6,12 L14,4" 
-                                                  Stroke="#8B5CF6" StrokeThickness="2"/>
+                                            <Path Data="M2,8 L6,12 L14,4" Stroke="#8B5CF6" StrokeThickness="2"/>
                                         </Canvas>
                                     </Viewbox>
-                                    <TextBlock Text="{Binding}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#E2E8F0"/>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
+
                 </StackPanel>
 
-                <!-- Perfil do usuário -->
-                <Border Grid.Row="2" 
-                        Background="#334155" 
-                        Margin="16" 
-                        CornerRadius="16" 
-                        Padding="16">
+                <!-- CARD DO USUÁRIO - clicável, abre popup -->
+                <Border Grid.Row="2"
+                        x:Name="UserCardSidebar"
+                        Background="#1A2340"
+                        Margin="12,0,12,16"
+                        CornerRadius="16"
+                        Padding="14"
+                        Cursor="Hand"
+                        MouseLeftButtonDown="UsuarioCard_Click">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="8" Opacity="0.3" ShadowDepth="2"/>
+                    </Border.Effect>
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="40" Height="40" Fill="#64748B"/>
-                        <StackPanel Margin="12,0,0,0">
-                            <TextBlock x:Name="UsuarioNomeText" 
-                                       Text="Usuário" 
-                                       FontWeight="SemiBold" 
+                        <Ellipse Width="40" Height="40">
+                            <Ellipse.Fill>
+                                <SolidColorBrush Color="#2D4A8A"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="UsuarioNomeText"
+                                       Text="Usuário"
+                                       FontWeight="SemiBold"
+                                       FontSize="18"
                                        Foreground="#F1F5F9"/>
-                            <TextBlock x:Name="UsuarioTipoText" 
-                                       Text="Premium" 
-                                       Foreground="#3B82F6" 
-                                       FontSize="11"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
+
             </Grid>
         </Border>
 
-        <!-- Área de conteúdo principal -->
+        <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
         <Border Grid.Column="1" 
-                Background="#0F172A" 
+                Background="#0A0F1E" 
                 Padding="30">
             <Grid x:Name="MainGrid">
                 <Grid.RowDefinitions>
@@ -301,235 +263,162 @@
                 </Grid.RowDefinitions>
 
                 <!-- Cabeçalho -->
-                <Border Grid.Row="0" 
-                        Background="#1E293B" 
-                        CornerRadius="12" 
-                        Padding="20" 
-                        Margin="0,0,0,20">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" 
-                                   Text="Meu Controle Financeiro" 
-                                   FontSize="24" 
-                                   FontWeight="Bold" 
-                                   Foreground="#F1F5F9"
-                                   VerticalAlignment="Center"/>
-
-                        <!-- Ícones do cabeçalho -->
-                        <StackPanel Grid.Column="1" 
-                                    Orientation="Horizontal" 
-                                    HorizontalAlignment="Right">
-                            <Button Style="{StaticResource SidebarButtonStyle}" 
-                                    Width="40" 
-                                    Height="40" 
-                                    Background="Transparent" 
-                                    Margin="0,0,8,0">
-                                <Viewbox Width="20" Height="20">
-                                    <Canvas Width="16" Height="16">
-                                        <Ellipse Canvas.Left="4" Canvas.Top="2" Width="8" Height="8" Fill="#94A3B8"/>
-                                        <Path Data="M2,14 L14,14 L14,16 L2,16 Z" Fill="#94A3B8"/>
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-
-                            <Button Style="{StaticResource SidebarButtonStyle}" 
-                                    Width="40" 
-                                    Height="40" 
-                                    Background="Transparent" 
-                                    Margin="0,0,8,0">
-                                <Viewbox Width="20" Height="20">
-                                    <Canvas Width="16" Height="16">
-                                        <Path Data="M8,2 L8,2 C10,2 12,4 12,6 L12,10 M8,14 L8,10" 
-                                              Stroke="#94A3B8" StrokeThickness="1.5"/>
-                                        <Ellipse Canvas.Left="10" Canvas.Top="1" Width="4" Height="4" Fill="#EF4444"/>
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-
-                            <Button Style="{StaticResource SidebarButtonStyle}" 
-                                    Width="40" 
-                                    Height="40" 
-                                    Background="Transparent">
-                                <Viewbox Width="20" Height="20">
-                                    <Canvas Width="16" Height="16">
-                                        <Ellipse Canvas.Left="4" Canvas.Top="4" Width="8" Height="8" 
-                                                 Stroke="#94A3B8" StrokeThickness="1.5" Fill="Transparent"/>
-                                        <Path Data="M8,4 L8,0 M8,16 L8,12 M12,8 L16,8 M0,8 L4,8" 
-                                              Stroke="#94A3B8" StrokeThickness="1.5"/>
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
+                <Border Grid.Row="0" Background="#111827" CornerRadius="12" Padding="20" Margin="0,0,0,20">
+                    <TextBlock Text="Meu Controle Financeiro" FontSize="24" FontWeight="Bold" Foreground="#F1F5F9" VerticalAlignment="Center"/>
                 </Border>
 
                 <!-- Cartão de saldo -->
-                <Border Grid.Row="1" 
-                        Background="#1E293B" 
-                        CornerRadius="12" 
-                        Padding="25" 
-                        Margin="0,0,0,20">
+                <Border Grid.Row="1" Background="#111827" CornerRadius="12" Padding="25" Margin="0,0,0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Saldo atual -->
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Saldo atual" 
-                                       FontSize="14" 
-                                       Foreground="#94A3B8"/>
-                            <TextBlock x:Name="BalanceText" 
-                                       Text="R$ 0,00" 
-                                       FontSize="32" 
-                                       FontWeight="Bold" 
-                                       Foreground="#F1F5F9" 
-                                       Margin="0,4,0,0"/>
+                            <TextBlock Text="Saldo atual" FontSize="14" Foreground="#94A3B8"/>
+                            <TextBlock x:Name="BalanceText" Text="R$ 0,00" FontSize="32" FontWeight="Bold" Foreground="#22C55E" Margin="0,4,0,0"/>
                         </StackPanel>
 
-                        <!-- Receita total -->
-                        <Border Grid.Column="1" 
-                                Background="#0F172A" 
-                                CornerRadius="8" 
-                                Padding="15" 
-                                Margin="10,0,0,0"
-                                BorderBrush="#10B981" 
-                                BorderThickness="1">
+                        <Border Grid.Column="1" Background="#0A0F1E" CornerRadius="8" Padding="15" Margin="10,0,0,0" BorderBrush="#10B981" BorderThickness="1">
                             <StackPanel>
-                                <TextBlock Text="Receita Total" 
-                                           FontSize="12" 
-                                           Foreground="#94A3B8"/>
-                                <TextBlock x:Name="MaxReceitaText" 
-                                           Text="R$ 0,00" 
-                                           FontSize="16" 
-                                           FontWeight="Bold" 
-                                           Foreground="#10B981" 
-                                           Margin="0,4,0,0"/>
+                                <TextBlock Text="Receita Total" FontSize="12" Foreground="#94A3B8"/>
+                                <TextBlock x:Name="MaxReceitaText" Text="R$ 0,00" FontSize="16" FontWeight="Bold" Foreground="#10B981" Margin="0,4,0,0"/>
                             </StackPanel>
                         </Border>
 
-                        <!-- Despesa total -->
-                        <Border Grid.Column="2" 
-                                Background="#0F172A" 
-                                CornerRadius="8" 
-                                Padding="15" 
-                                Margin="10,0,0,0"
-                                BorderBrush="#EF4444" 
-                                BorderThickness="1">
+                        <Border Grid.Column="2" Background="#0A0F1E" CornerRadius="8" Padding="15" Margin="10,0,0,0" BorderBrush="#EF4444" BorderThickness="1">
                             <StackPanel>
-                                <TextBlock Text="Despesa total" 
-                                           FontSize="12" 
-                                           Foreground="#94A3B8"/>
-                                <TextBlock x:Name="MaxDespesaText" 
-                                           Text="R$ 0,00" 
-                                           FontSize="16" 
-                                           FontWeight="Bold" 
-                                           Foreground="#EF4444" 
-                                           Margin="0,4,0,0"/>
+                                <TextBlock Text="Despesa total" FontSize="12" Foreground="#94A3B8"/>
+                                <TextBlock x:Name="MaxDespesaText" Text="R$ 0,00" FontSize="16" FontWeight="Bold" Foreground="#EF4444" Margin="0,4,0,0"/>
                             </StackPanel>
                         </Border>
                     </Grid>
                 </Border>
 
-                <!-- Área do gráfico -->
-                <Border Grid.Row="2" 
-                        Background="#1E293B" 
-                        CornerRadius="12" 
-                        Padding="20" 
-                        Margin="0,0,0,20">
+                <!-- Gráfico -->
+                <Border Grid.Row="2" Background="#111827" CornerRadius="12" Padding="20" Margin="0,0,0,20">
                     <Grid x:Name="ChartGrid">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-
-                        <TextBlock Grid.Row="0" 
-                                   Text="Evolução Financeira" 
-                                   FontSize="18" 
-                                   FontWeight="SemiBold" 
-                                   Foreground="#F1F5F9"
-                                   Margin="0,0,0,20"/>
-
-                        <!-- Gráfico com LiveCharts -->
-                        <lvc:CartesianChart Grid.Row="1" 
-                                            x:Name="FinanceChart"
-                                            Background="Transparent"
-                                            DisableAnimations="True"
-                                            Hoverable="False"
-                                            DataTooltip="{x:Null}"
-                                            LegendLocation="Top">
-
-                            <!-- Legenda do gráfico -->
+                        <TextBlock Grid.Row="0" Text="Evolução Financeira" FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,20"/>
+                        <lvc:CartesianChart Grid.Row="1" x:Name="FinanceChart" Background="Transparent"
+                                            DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" LegendLocation="Top">
                             <lvc:CartesianChart.ChartLegend>
-                                <lvc:DefaultLegend Foreground="White" 
-                                                   FontSize="12"
-                                                   Margin="0,10,0,0"/>
+                                <lvc:DefaultLegend Foreground="White" FontSize="12" Margin="0,10,0,0"/>
                             </lvc:CartesianChart.ChartLegend>
-
-                            <!-- Séries do gráfico -->
                             <lvc:CartesianChart.Series>
-                                <!-- Linha do Saldo -->
-                                <lvc:LineSeries Title="Saldo Acumulado"
-                                                Values="{Binding SaldoValues}"
-                                                Stroke="#3B82F6"
-                                                StrokeThickness="3"
-                                                PointGeometry="{x:Null}"
-                                                Fill="Transparent"/>
-
-                                <!-- Linha das Receitas -->
-                                <lvc:LineSeries Title="Receitas Mensais"
-                                                Values="{Binding ReceitaValues}"
-                                                Stroke="#10B981"
-                                                StrokeThickness="2"
-                                                PointGeometry="{x:Null}"
-                                                Fill="Transparent"/>
-
-                                <!-- Linha das Despesas -->
-                                <lvc:LineSeries Title="Despesas Mensais"
-                                                Values="{Binding DespesaValues}"
-                                                Stroke="#EF4444"
-                                                StrokeThickness="2"
-                                                PointGeometry="{x:Null}"
-                                                Fill="Transparent"/>
+                                <lvc:LineSeries Title="Saldo Acumulado" Values="{Binding SaldoValues}" Stroke="#3B82F6" StrokeThickness="3" PointGeometry="{x:Null}" Fill="Transparent"/>
+                                <lvc:LineSeries Title="Receitas Mensais" Values="{Binding ReceitaValues}" Stroke="#10B981" StrokeThickness="2" PointGeometry="{x:Null}" Fill="Transparent"/>
+                                <lvc:LineSeries Title="Despesas Mensais" Values="{Binding DespesaValues}" Stroke="#EF4444" StrokeThickness="2" PointGeometry="{x:Null}" Fill="Transparent"/>
                             </lvc:CartesianChart.Series>
-
-                            <!-- Eixo X (horizontal) -->
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Title="Mês"
-                                          Labels="{Binding Labels}"
-                                          Foreground="#94A3B8"
-                                          Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
+                                <lvc:Axis Title="Mês" Labels="{Binding Labels}" Foreground="#94A3B8" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
                             </lvc:CartesianChart.AxisX>
-
-                            <!-- Eixo Y (vertical) -->
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis Title="Valor (R$)"
-                                          LabelFormatter="{Binding Formatter}"
-                                          Foreground="#94A3B8"
-                                          Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
+                                <lvc:Axis Title="Valor (R$)" LabelFormatter="{Binding Formatter}" Foreground="#94A3B8" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
                     </Grid>
                 </Border>
 
                 <!-- Ações rápidas -->
-                <StackPanel Grid.Row="3" 
-                            Orientation="Horizontal" 
-                            HorizontalAlignment="Center">
-                    <Button Content="Relatórios" 
-                            Style="{StaticResource ActionButtonStyle}" 
-                            Click="ReportsButton_Click"/>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Relatórios" Style="{StaticResource ActionButtonStyle}" Click="ReportsButton_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
+
+        <!-- OVERLAY - fecha popup ao clicar fora -->
+        <Rectangle x:Name="PopupOverlay"
+                   Grid.ColumnSpan="2"
+                   Fill="Transparent"
+                   Panel.ZIndex="10"
+                   Visibility="Collapsed"
+                   MouseLeftButtonDown="FecharPopup_Click"/>
+
+        <!-- POPUP DO USUÁRIO -->
+        <Border x:Name="UserPopupCard"
+                Grid.Column="0"
+                Panel.ZIndex="11"
+                Visibility="Collapsed"
+                Background="#0F1E45"
+                BorderBrush="#2563EB"
+                BorderThickness="1"
+                CornerRadius="16"
+                Margin="12,0,12,80"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Stretch">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="24" Opacity="0.6" ShadowDepth="4"/>
+            </Border.Effect>
+            <StackPanel Margin="16,16,16,12">
+
+                <TextBlock Text="Conta" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,10"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                    <Ellipse Width="44" Height="44">
+                        <Ellipse.Fill>
+                            <SolidColorBrush Color="#1E3A8A"/>
+                        </Ellipse.Fill>
+                        <Ellipse.Stroke>
+                            <SolidColorBrush Color="#3B82F6"/>
+                        </Ellipse.Stroke>
+                        <Ellipse.StrokeThickness>2</Ellipse.StrokeThickness>
+                    </Ellipse>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="PopupNomeText" Text="Usuário" FontSize="14" FontWeight="SemiBold" Foreground="#F1F5F9"/>
+                        <TextBlock x:Name="PopupEmailText" Text="email@exemplo.com" FontSize="11" Foreground="#64748B"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Rectangle Height="1" Fill="#1E2D5A" Margin="0,0,0,12"/>
+
+                <!-- Botão Configurações -->
+                <Button x:Name="BtnConfiguracoes" Height="44" Margin="0,0,0,8" Cursor="Hand" Click="PopupConfiguracoes_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="brdConfig" Background="#0D1B3E" CornerRadius="10" BorderBrush="#1E3A8A" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="14,0" VerticalAlignment="Center">
+                                    <TextBlock Text="⚙" Foreground="#3B82F6" FontSize="15" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Configurações" Foreground="#E2E8F0" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="brdConfig" Property="Background" Value="#1A2D5A"/>
+                                    <Setter TargetName="brdConfig" Property="BorderBrush" Value="#3B82F6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Botão Fazer Logout -->
+                <Button x:Name="BtnLogout" Height="44" Cursor="Hand" Click="PopupLogout_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="brdLogout" Background="#1F0A0A" CornerRadius="10" BorderBrush="#7F1D1D" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="14,0" VerticalAlignment="Center">
+                                    <TextBlock Text="→" Foreground="#EF4444" FontSize="15" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Fazer Logout" Foreground="#EF4444" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="brdLogout" Property="Background" Value="#2D0F0F"/>
+                                    <Setter TargetName="brdLogout" Property="BorderBrush" Value="#EF4444"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Window>

@@ -67,35 +67,40 @@ namespace NommusProject
             }
         }
 
-        // Oculta o placeholder quando o campo de email recebe foco
+        // Lógica para o Usuário
+        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UsernamePlaceholder.Visibility = string.IsNullOrEmpty(UsernameTextBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void UsernameTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             UsernamePlaceholder.Visibility = Visibility.Collapsed;
         }
 
-        // Mostra o placeholder se o campo de email estiver vazio ao perder foco
         private void UsernameTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(UsernameTextBox.Text))
-            {
                 UsernamePlaceholder.Visibility = Visibility.Visible;
-            }
         }
 
-        // Oculta o placeholder quando o campo de senha recebe foco
+        // Lógica para a Senha
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void PasswordBox_GotFocus(object sender, RoutedEventArgs e)
         {
             PasswordPlaceholder.Visibility = Visibility.Collapsed;
         }
 
-        // Mostra o placeholder se o campo de senha estiver vazio ao perder foco
         private void PasswordBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(PasswordBox.Password))
-            {
                 PasswordPlaceholder.Visibility = Visibility.Visible;
-            }
         }
+
 
         // Abre a tela de cadastro para novos usuários
         private void CadastrarSe_Click(object sender, RoutedEventArgs e)
