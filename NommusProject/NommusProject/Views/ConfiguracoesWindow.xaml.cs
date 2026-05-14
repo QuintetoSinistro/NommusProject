@@ -216,6 +216,10 @@ namespace NommusProject
         { new IncomeWindow().Show(); this.Close(); }
 
         private void GoalsButton_Click(object sender, RoutedEventArgs e)
-        { MessageBox.Show("Navegar para Metas", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information); }
+        {
+            new MetasWindow().Show();
+            this.Close();
+        }
     }
+    
 }
