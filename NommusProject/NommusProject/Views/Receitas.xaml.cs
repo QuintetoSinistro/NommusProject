@@ -61,7 +61,11 @@ namespace NommusProject
         private void CardsButton_Click(object sender, RoutedEventArgs e) { /* Lógica Cartões */ }
         private void ExpensesButton_Click(object sender, RoutedEventArgs e) { new ExpensesWindow().Show(); this.Close(); }
         private void IncomeButton_Click(object sender, RoutedEventArgs e) { }
-        private void GoalsButton_Click(object sender, RoutedEventArgs e) { /* Lógica Metas */ }
+        private void GoalsButton_Click(object sender, RoutedEventArgs e)
+        {
+            new MetasWindow().Show();
+            this.Close();
+        }
         private void BackToDashboard_Click(object sender, RoutedEventArgs e) { new MainWindow().Show(); this.Close(); }
 
         // MANTENHA SEUS MÉTODOS ORIGINAIS ABAIXO:
