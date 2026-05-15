@@ -207,7 +207,10 @@ namespace NommusProject
         { new MainWindow().Show(); this.Close(); }
 
         private void CardsButton_Click(object sender, RoutedEventArgs e)
-        { MessageBox.Show("Navegar para Cartões", "Navegação", MessageBoxButton.OK, MessageBoxImage.Information); }
+        {
+            new NommusProject.Views.cartoes().Show();
+            this.Close();
+        }
 
         private void ExpensesButton_Click(object sender, RoutedEventArgs e)
         { new ExpensesWindow().Show(); this.Close(); }

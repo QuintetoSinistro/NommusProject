@@ -1,12 +1,576 @@
 ﻿<Window x:Class="NommusProject.Views.cartoes"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NommusProject.Views"
-        mc:Ignorable="d"
-        Title="cartoes" Height="450" Width="800">
+        Title="Nommus - Cartões"
+        Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#0A0F1E"
+        WindowState="Maximized">
+
+    <Window.Resources>
+
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="16,14"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="14" Margin="8,4">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E2D5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#243670"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#111827"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+
+        <Style x:Key="AddButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1D4ED8"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="24,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="brd" Background="{TemplateBinding Background}" CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="brd" Property="Background" Value="#2563EB"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="brd" Property="Background" Value="#1E40AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ====================================================== -->
+        <!-- SIDEBAR                                                 -->
+        <!-- ====================================================== -->
+        <Border Grid.Column="0" Background="#0D1B3E" BorderBrush="#1E2D5A" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo -->
+                <StackPanel Grid.Row="0" Margin="20,30" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Viewbox Width="40" Height="40">
+                        <Canvas Width="24" Height="24">
+                            <Path Data="M3,12 L7,8 L11,14 L15,10 L19,16 L21,12" Stroke="#3B82F6" StrokeThickness="2"/>
+                            <Ellipse Canvas.Left="2"  Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="6"  Canvas.Top="7"  Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="10" Canvas.Top="13" Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="14" Canvas.Top="9"  Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="18" Canvas.Top="15" Width="2" Height="2" Fill="#3B82F6"/>
+                            <Ellipse Canvas.Left="20" Canvas.Top="11" Width="2" Height="2" Fill="#3B82F6"/>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="Nommus" FontSize="24" FontWeight="Bold" Foreground="#F1F5F9" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                </StackPanel>
+
+                <!-- Menu -->
+                <StackPanel Grid.Row="1" Margin="10,20">
+
+                    <Button Content="Finanças" Style="{StaticResource SidebarButtonStyle}" Click="FinanceButton_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
+                                        <Canvas Width="16" Height="16">
+                                            <Path Data="M2,2 L14,2 L14,14 L2,14 Z M4,4 L12,4 L12,12 L4,12 Z M6,6 L10,6 L10,10 L6,10 Z" Fill="#3B82F6"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <!-- Cartões - destacado como ativo -->
+                    <Border Background="#1E2D5A" CornerRadius="14" Margin="8,4">
+                        <Button Content="Cartões" Style="{StaticResource SidebarButtonStyle}" Click="CardsButton_Click">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="22" Height="22" Margin="0,0,14,0">
+                                            <Canvas Width="16" Height="16">
+                                                <Path Data="M2,4 L14,4 L14,12 L2,12 Z M4,6 L12,6 L12,10 L4,10 Z M6,8 L10,8" Fill="#3B82F6"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#3B82F6"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </Border>
+
+                    <Button Content="Despesas" Style="{StaticResource SidebarButtonStyle}" Click="ExpensesButton_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
+                                        <Canvas Width="16" Height="16">
+                                            <Path Data="M8,2 L8,14 M2,8 L14,8" Stroke="#EF4444" StrokeThickness="2"/>
+                                            <Path Data="M4,4 L12,12 M12,4 L4,12" Stroke="#EF4444" StrokeThickness="1"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <Button Content="Receitas" Style="{StaticResource SidebarButtonStyle}" Click="CreditsButton_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
+                                        <Canvas Width="16" Height="16">
+                                            <Path Data="M8,2 L8,14 M2,8 L14,8" Stroke="#F59E0B" StrokeThickness="2"/>
+                                            <Path Data="M5,5 L11,11 M11,5 L5,11" Stroke="#F59E0B" StrokeThickness="1"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <Button Content="Metas" Style="{StaticResource SidebarButtonStyle}" Click="GoalsButton_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="22" Height="22" Margin="0,0,14,0">
+                                        <Canvas Width="16" Height="16">
+                                            <Path Data="M2,8 L6,12 L14,4" Stroke="#8B5CF6" StrokeThickness="2"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Foreground="#E2E8F0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                </StackPanel>
+
+                <!-- Card usuário -->
+                <Border Grid.Row="2" Background="#1A2340" Margin="12,0,12,16" CornerRadius="16" Padding="14"
+                        Cursor="Hand" MouseLeftButtonDown="UsuarioCard_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="40" Height="40">
+                            <Ellipse.Fill>
+                                <SolidColorBrush Color="#2D4A8A"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="UsuarioNomeText" Text="Usuário" FontWeight="SemiBold" FontSize="16" Foreground="#F1F5F9"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!-- ====================================================== -->
+        <!-- CONTEÚDO PRINCIPAL                                      -->
+        <!-- ====================================================== -->
+        <Border Grid.Column="1" Background="#0A0F1E" Padding="30">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Cabeçalho -->
+                <Grid Grid.Row="0" Margin="0,0,0,28">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Meus Cartões" FontSize="28" FontWeight="Bold" Foreground="#F1F5F9"/>
+                        <TextBlock x:Name="SubtituloCartoes" Text="0 cartões cadastrados"
+                                   FontSize="14" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="+ Adicionar Cartão"
+                            Style="{StaticResource AddButtonStyle}"
+                            VerticalAlignment="Center"
+                            Click="AdicionarCartao_Click"/>
+                </Grid>
+
+                <!-- Lista de cartões + estado vazio -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <Grid>
+
+                        <!-- Estado vazio -->
+                        <StackPanel x:Name="EstadoVazioPanel"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="0,80">
+                            <!-- Ilustração de cartão grande -->
+                            <Border Width="220" Height="135" CornerRadius="16" Margin="0,0,0,28"
+                                    HorizontalAlignment="Center">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#1E3A8A" Offset="0"/>
+                                        <GradientStop Color="#3B82F6" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#3B82F6" BlurRadius="20" Opacity="0.3" ShadowDepth="0"/>
+                                </Border.Effect>
+                                <Grid Margin="20">
+                                    <!-- Chip -->
+                                    <Border Width="34" Height="26" CornerRadius="4"
+                                            HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#F59E0B" Offset="0"/>
+                                                <GradientStop Color="#D97706" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+                                    <!-- Número mascarado -->
+                                    <TextBlock Text="•••• •••• •••• ••••"
+                                               FontSize="16" FontWeight="SemiBold"
+                                               Foreground="#FFFFFFAA"
+                                               HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                               Margin="0,0,0,18"/>
+                                    <!-- Nome banco -->
+                                    <TextBlock Text="Seu cartão aqui"
+                                               FontSize="12" Foreground="#FFFFFF88"
+                                               HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                                </Grid>
+                            </Border>
+
+                            <TextBlock Text="Nenhum cartão cadastrado"
+                                       FontSize="20" FontWeight="Bold"
+                                       Foreground="#F1F5F9" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Clique em '+ Adicionar Cartão' para registrar seu primeiro cartão"
+                                       FontSize="14" Foreground="#64748B"
+                                       HorizontalAlignment="Center" Margin="0,8,0,28"/>
+                            <Button Content="+ Adicionar Cartão"
+                                    Style="{StaticResource AddButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    Click="AdicionarCartao_Click"/>
+                        </StackPanel>
+
+                        <!-- Grid de cartões cadastrados -->
+                        <ItemsControl x:Name="ListaCartoes" Visibility="Collapsed">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Card visual de cartão de crédito -->
+                                    <Border Width="280" Height="170" CornerRadius="16" Margin="0,0,20,20" Cursor="Hand">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="{Binding CorInicio}" Offset="0"/>
+                                                <GradientStop Color="{Binding CorFim}"    Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#000000" BlurRadius="16" Opacity="0.4" ShadowDepth="4"/>
+                                        </Border.Effect>
+                                        <Grid Margin="22,18">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Topo: chip + bandeira -->
+                                            <Grid Grid.Row="0">
+                                                <Border Width="36" Height="28" CornerRadius="4" HorizontalAlignment="Left">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                            <GradientStop Color="#F59E0B" Offset="0"/>
+                                                            <GradientStop Color="#D97706" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                                <TextBlock Text="{Binding Bandeira}" FontSize="11"
+                                                           Foreground="#FFFFFF99" FontWeight="SemiBold"
+                                                           HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                            </Grid>
+
+                                            <!-- Meio: número -->
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding NumeroFormatado}"
+                                                       FontSize="17" FontWeight="SemiBold"
+                                                       Foreground="#FFFFFFCC"
+                                                       VerticalAlignment="Center"
+                                                       FontFamily="Courier New"/>
+
+                                            <!-- Base: banco + botão excluir -->
+                                            <Grid Grid.Row="2">
+                                                <TextBlock Text="{Binding Banco}"
+                                                           FontSize="14" FontWeight="Bold"
+                                                           Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                                <Button HorizontalAlignment="Right"
+                                                        Width="28" Height="28"
+                                                        Cursor="Hand"
+                                                        Tag="{Binding Id}"
+                                                        Click="ExcluirCartao_Click">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="bDel" Background="#40000000" CornerRadius="6">
+                                                                <TextBlock Text="✕" FontSize="13" Foreground="#FFAAAA"
+                                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="bDel" Property="Background" Value="#80EF4444"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </Grid>
+
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- ====================================================== -->
+        <!-- OVERLAY popup usuário                                   -->
+        <!-- ====================================================== -->
+        <Rectangle x:Name="PopupOverlay" Grid.ColumnSpan="2" Fill="Transparent"
+                   Panel.ZIndex="10" Visibility="Collapsed" MouseLeftButtonDown="FecharPopup_Click"/>
+
+        <!-- POPUP USUÁRIO -->
+        <Border x:Name="UserPopupCard" Grid.Column="0" Panel.ZIndex="11" Visibility="Collapsed"
+                Background="#0F1E45" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="16"
+                Margin="12,0,12,80" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="24" Opacity="0.6" ShadowDepth="4"/>
+            </Border.Effect>
+            <StackPanel Margin="16,16,16,12">
+                <TextBlock Text="Conta" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                    <Ellipse Width="44" Height="44">
+                        <Ellipse.Fill>
+                            <SolidColorBrush Color="#1E3A8A"/>
+                        </Ellipse.Fill>
+                        <Ellipse.Stroke>
+                            <SolidColorBrush Color="#3B82F6"/>
+                        </Ellipse.Stroke>
+                        <Ellipse.StrokeThickness>2</Ellipse.StrokeThickness>
+                    </Ellipse>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="PopupNomeText"  Text="Usuário" FontSize="14" FontWeight="SemiBold" Foreground="#F1F5F9"/>
+                        <TextBlock x:Name="PopupEmailText" Text="email@exemplo.com" FontSize="11" Foreground="#64748B"/>
+                    </StackPanel>
+                </StackPanel>
+                <Rectangle Height="1" Fill="#1E2D5A" Margin="0,0,0,12"/>
+                <Button Height="44" Margin="0,0,0,8" Cursor="Hand" Click="PopupConfiguracoes_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="brdConfig" Background="#0D1B3E" CornerRadius="10" BorderBrush="#1E3A8A" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="14,0" VerticalAlignment="Center">
+                                    <TextBlock Text="⚙" Foreground="#3B82F6" FontSize="15" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Configurações" Foreground="#E2E8F0" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="brdConfig" Property="Background" Value="#1A2D5A"/>
+                                    <Setter TargetName="brdConfig" Property="BorderBrush" Value="#3B82F6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Height="44" Cursor="Hand" Click="PopupLogout_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="brdLogout" Background="#1F0A0A" CornerRadius="10" BorderBrush="#7F1D1D" BorderThickness="1">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="14,0" VerticalAlignment="Center">
+                                    <TextBlock Text="→" Foreground="#EF4444" FontSize="15" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Fazer Logout" Foreground="#EF4444" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="brdLogout" Property="Background" Value="#2D0F0F"/>
+                                    <Setter TargetName="brdLogout" Property="BorderBrush" Value="#EF4444"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- ====================================================== -->
+        <!-- OVERLAY + POPUP ADICIONAR CARTÃO                        -->
+        <!-- ====================================================== -->
+        <Rectangle x:Name="NovoCartaoOverlay" Grid.ColumnSpan="2" Fill="#88000000"
+                   Panel.ZIndex="19" Visibility="Collapsed" MouseLeftButtonDown="FecharNovoCartao_Click"/>
+
+        <Border x:Name="NovoCartaoPopup" Grid.ColumnSpan="2" Panel.ZIndex="20" Visibility="Collapsed"
+                Background="#0F1E45" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="20"
+                Width="460" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="40" Opacity="0.7" ShadowDepth="0"/>
+            </Border.Effect>
+            <StackPanel Margin="32,28,32,32">
+
+                <!-- Cabeçalho popup -->
+                <Grid Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="Novo Cartão" FontSize="20" FontWeight="Bold" Foreground="#F1F5F9"/>
+                        <TextBlock Text="Preencha os dados do cartão" FontSize="13" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Width="32" Height="32" Cursor="Hand" Click="FecharNovoCartao_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bX" Background="Transparent" CornerRadius="8">
+                                    <TextBlock Text="✕" FontSize="16" Foreground="#94A3B8"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bX" Property="Background" Value="#1E2D5A"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+                <!-- Preview do cartão -->
+                <Border Height="140" CornerRadius="14" Margin="0,0,0,24">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#1E3A8A" Offset="0"/>
+                            <GradientStop Color="#3B82F6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid Margin="22,16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Width="36" Height="26" CornerRadius="4" HorizontalAlignment="Left">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#F59E0B" Offset="0"/>
+                                    <GradientStop Color="#D97706" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Grid.Row="1" x:Name="PreviewNumero"
+                                   Text="•••• •••• •••• ••••"
+                                   FontSize="18" FontWeight="SemiBold" FontFamily="Courier New"
+                                   Foreground="#FFFFFFCC" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" x:Name="PreviewBanco"
+                                   Text="Nome do banco"
+                                   FontSize="14" FontWeight="Bold" Foreground="#FFFFFFAA"/>
+                    </Grid>
+                </Border>
+
+                <!-- Campo: Número do cartão -->
+                <TextBlock Text="Número do cartão" FontSize="13" Foreground="#94A3B8" Margin="0,0,0,6"/>
+                <TextBox x:Name="NumeroCartaoBox"
+                         FontSize="15" FontFamily="Courier New"
+                         Foreground="#F1F5F9" Background="#0D1B3E"
+                         BorderBrush="#1E3A8A" BorderThickness="1"
+                         Padding="12,10" Margin="0,0,0,16"
+                         MaxLength="19"
+                         TextChanged="NumeroCartao_TextChanged"/>
+
+                <!-- Campo: Banco / Fornecedora -->
+                <TextBlock Text="Banco / Fornecedora" FontSize="13" Foreground="#94A3B8" Margin="0,0,0,6"/>
+                <ComboBox x:Name="BancoComboBox"
+                          FontSize="14"
+                          Foreground="Black" Background="#0D1B3E"
+                          BorderBrush="#1E3A8A" BorderThickness="1"
+                          Padding="12,10" Margin="0,0,0,8"
+                          SelectionChanged="Banco_SelectionChanged">
+                    <ComboBoxItem Content="Santander"/>
+                    <ComboBoxItem Content="Inter"/>
+                    <ComboBoxItem Content="Bradesco"/>
+                    <ComboBoxItem Content="Itaú"/>
+                    <ComboBoxItem Content="Nubank"/>
+                    <ComboBoxItem Content="C6 Bank"/>
+                    <ComboBoxItem Content="Caixa Econômica"/>
+                    <ComboBoxItem Content="Banco do Brasil"/>
+                    <ComboBoxItem Content="BTG Pactual"/>
+                    <ComboBoxItem Content="Sicoob"/>
+                    <ComboBoxItem Content="Outro"/>
+                </ComboBox>
+
+                <!-- Banco personalizado (aparece se "Outro") -->
+                <TextBox x:Name="BancoCustomBox"
+                         FontSize="14" Foreground="#F1F5F9" Background="#0D1B3E"
+                         BorderBrush="#1E3A8A" BorderThickness="1"
+                         Padding="12,10" Margin="0,0,0,16"
+                         Visibility="Collapsed"
+                         TextChanged="BancoCustom_TextChanged"/>
+
+                <!-- Mensagem de erro -->
+                <TextBlock x:Name="ErroText" FontSize="12" Foreground="#EF4444"
+                           Margin="0,0,0,12" Visibility="Collapsed"/>
+
+                <!-- Botão salvar -->
+                <Button Content="Salvar Cartão"
+                        Style="{StaticResource AddButtonStyle}"
+                        Height="48" FontSize="15"
+                        Click="SalvarCartao_Click"/>
+
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Window>

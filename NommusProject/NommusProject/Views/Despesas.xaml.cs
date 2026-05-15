@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using NommusProject.Data;
@@ -14,7 +15,7 @@ namespace NommusProject
         {
             InitializeComponent();
             CarregarDadosUsuario();
-            // Chame aqui seus métodos originais de carregar dados
+            CarregarCartoes();
         }
 
         private void CarregarDadosUsuario()
@@ -24,6 +25,34 @@ namespace NommusProject
             if (UsuarioNomeText != null) UsuarioNomeText.Text = usuario.Nome;
             if (PopupNomeText != null) PopupNomeText.Text = usuario.Nome;
             if (PopupEmailText != null) PopupEmailText.Text = usuario.Email;
+        }
+
+        private void CarregarCartoes()
+        {
+            // Placeholder para compatibilidade futura com o banco
+            CardComboBox.Items.Clear();
+            CardComboBox.Items.Add("Selecione um cartão...");
+            CardComboBox.Items.Add("Cartão Nubank");
+            CardComboBox.Items.Add("Cartão Inter");
+            CardComboBox.SelectedIndex = 0;
+        }
+
+        private void PaymentMethodComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (PaymentMethodComboBox.SelectedItem == null) return;
+
+            var selectedItem = (System.Windows.Controls.ComboBoxItem)PaymentMethodComboBox.SelectedItem;
+            string content = selectedItem.Content.ToString();
+
+            if (content == "Crédito")
+            {
+                CardComboBox.IsEnabled = true;
+            }
+            else
+            {
+                CardComboBox.IsEnabled = false;
+                CardComboBox.SelectedIndex = 0;
+            }
         }
 
         // Lógica do Popup
@@ -57,7 +86,11 @@ namespace NommusProject
 
         // Navegação
         private void FinanceButton_Click(object sender, RoutedEventArgs e) { new MainWindow().Show(); this.Close(); }
-        private void CardsButton_Click(object sender, RoutedEventArgs e) { /* Lógica Cartões */ }
+        private void CardsButton_Click(object sender, RoutedEventArgs e)
+        {
+            new NommusProject.Views.cartoes().Show();
+            this.Close();
+        }
         private void ExpensesButton_Click(object sender, RoutedEventArgs e) { }
         private void CreditsButton_Click(object sender, RoutedEventArgs e) { new IncomeWindow().Show(); this.Close(); }
         private void GoalsButton_Click(object sender, RoutedEventArgs e)
@@ -67,7 +100,7 @@ namespace NommusProject
         }
         private void BackToDashboard_Click(object sender, RoutedEventArgs e) { new MainWindow().Show(); this.Close(); }
 
-        // MANTENHA SEUS MÉTODOS ORIGINAIS ABAIXO:
+        // Métodos de Ação
         private void AddExpense_Click(object sender, RoutedEventArgs e) { /* Sua lógica de adicionar */ }
         private void RemoverDespesa_Click(object sender, RoutedEventArgs e) { /* Sua lógica de remover */ }
         private void PlanFutureExpense_Click(object sender, RoutedEventArgs e)

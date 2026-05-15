@@ -299,47 +299,89 @@
 
                     <!-- FORMULÁRIO -->
                     <Border Grid.Column="1" Background="#111827" CornerRadius="12" Padding="20">
-                        <StackPanel>
-                            <TextBlock Text="Adicionar Novo Gasto" FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,20"/>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Adicionar Novo Gasto" FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,20"/>
 
-                            <TextBlock Text="Descrição" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                            <TextBox x:Name="DescriptionTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15"/>
+                                <TextBlock Text="Descrição" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="DescriptionTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Valor (R$ )" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                            <TextBox x:Name="ValueTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Text="0,00" Margin="0,0,0,15"/>
+                                <TextBlock Text="Valor (R$  )" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ValueTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Text="0,00" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Categoria" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                            <ComboBox x:Name="CategoryComboBox" Background="#0A0F1E" Foreground="Black" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15">
-                                <ComboBoxItem Content="Alimentação"/>
-                                <ComboBoxItem Content="Transporte"/>
-                                <ComboBoxItem Content="Moradia"/>
-                                <ComboBoxItem Content="Lazer"/>
-                                <ComboBoxItem Content="Saúde"/>
-                                <ComboBoxItem Content="Educação"/>
-                                <ComboBoxItem Content="Outros"/>
-                            </ComboBox>
+                                <!-- Linha com Categoria e Meio de Pagamento -->
+                                <Grid Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Data" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                            <TextBox x:Name="DateTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Margin="0,0,0,15" Text="{Binding Path=., Source={x:Static system:DateTime.Today}, StringFormat='dd/MM/yyyy'}"/>
+                                    <!-- Categoria -->
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock Text="Categoria" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                        <ComboBox x:Name="CategoryComboBox" Background="#0A0F1E" Foreground="Black" BorderThickness="0" Padding="10" FontSize="14">
+                                            <ComboBoxItem Content="Alimentação"/>
+                                            <ComboBoxItem Content="Transporte"/>
+                                            <ComboBoxItem Content="Moradia"/>
+                                            <ComboBoxItem Content="Lazer"/>
+                                            <ComboBoxItem Content="Saúde"/>
+                                            <ComboBoxItem Content="Educação"/>
+                                            <ComboBoxItem Content="Outros"/>
+                                        </ComboBox>
+                                    </StackPanel>
 
-                            <TextBlock Text="Tipo de Gasto" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                <RadioButton x:Name="FixedRadio" Content="Fixo" Foreground="White" Margin="0,0,15,0" IsChecked="True"/>
-                                <RadioButton x:Name="VariableRadio" Content="Variável" Foreground="White" Margin="0,0,15,0"/>
-                                <RadioButton x:Name="EmergencyRadio" Content="Emergência" Foreground="White"/>
-                            </StackPanel>
+                                    <!-- Meio de Pagamento -->
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                        <TextBlock Text="Meio de Pagamento" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                        <ComboBox x:Name="PaymentMethodComboBox" Background="#0A0F1E" Foreground="Black" BorderThickness="0" Padding="10" FontSize="14" SelectionChanged="PaymentMethodComboBox_SelectionChanged">
+                                            <ComboBoxItem Content="Selecione..."/>
+                                            <ComboBoxItem Content="Débito"/>
+                                            <ComboBoxItem Content="Crédito"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
 
-                            <Button Content="Adicionar Gasto" Style="{StaticResource FormButtonStyle}" Click="AddExpense_Click" Margin="0,0,0,10"/>
+                                <!-- Linha com Data e Seletor de Cartão -->
+                                <Grid Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <!-- Painel Futuro -->
-                            <Border x:Name="FuturePlanningPanel" Background="#0A0F1E" CornerRadius="8" Padding="15" Visibility="Collapsed">
-                                <StackPanel>
-                                    <TextBlock Text="Planejar Gasto Futuro" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,10"/>
-                                    <TextBox x:Name="FutureValueTextBox" Background="#111827" Foreground="White" BorderThickness="0" Padding="10" Margin="0,0,0,10" Text="0,00"/>
-                                    <Button Content="Salvar Plano" Style="{StaticResource FormButtonStyle}" Click="SaveFuturePlan_Click"/>
+                                    <!-- Data -->
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock Text="Data" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="DateTextBox" Background="#0A0F1E" Foreground="White" BorderThickness="0" Padding="10" FontSize="14" Text="{Binding Path=., Source={x:Static system:DateTime.Today}, StringFormat='dd/MM/yyyy'}"/>
+                                    </StackPanel>
+
+                                    <!-- Seletor de Cartão -->
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                        <TextBlock Text="Cartão" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                        <ComboBox x:Name="CardComboBox" Background="#0A0F1E" Foreground="Black" BorderThickness="0" Padding="10" FontSize="14" IsEnabled="False">
+                                            <ComboBoxItem Content="Selecione um cartão..."/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="Tipo de Gasto" Foreground="#94A3B8" FontSize="12" Margin="0,0,0,5"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <RadioButton x:Name="FixedRadio" Content="Fixo" Foreground="White" Margin="0,0,15,0" IsChecked="True"/>
+                                    <RadioButton x:Name="VariableRadio" Content="Variável" Foreground="White" Margin="0,0,15,0"/>
+                                    <RadioButton x:Name="EmergencyRadio" Content="Emergência" Foreground="White"/>
                                 </StackPanel>
-                            </Border>
-                        </StackPanel>
+
+                                <Button Content="Adicionar Gasto" Style="{StaticResource FormButtonStyle}" Click="AddExpense_Click" Margin="0,0,0,10"/>
+
+                                <!-- Painel Futuro -->
+                                <Border x:Name="FuturePlanningPanel" Background="#0A0F1E" CornerRadius="8" Padding="15" Visibility="Collapsed">
+                                    <StackPanel>
+                                        <TextBlock Text="Planejar Gasto Futuro" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,10"/>
+                                        <TextBox x:Name="FutureValueTextBox" Background="#111827" Foreground="White" BorderThickness="0" Padding="10" Margin="0,0,0,10" Text="0,00"/>
+                                        <Button Content="Salvar Plano" Style="{StaticResource FormButtonStyle}" Click="SaveFuturePlan_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
                     </Border>
                 </Grid>
             </Grid>
