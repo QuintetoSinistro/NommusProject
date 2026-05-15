@@ -58,7 +58,11 @@ namespace NommusProject
 
         // Navegação
         private void FinanceButton_Click(object sender, RoutedEventArgs e) { new MainWindow().Show(); this.Close(); }
-        private void CardsButton_Click(object sender, RoutedEventArgs e) { /* Lógica Cartões */ }
+        private void CardsButton_Click(object sender, RoutedEventArgs e)
+        {
+            new NommusProject.Views.cartoes().Show();
+            this.Close();
+        }
         private void ExpensesButton_Click(object sender, RoutedEventArgs e) { new ExpensesWindow().Show(); this.Close(); }
         private void IncomeButton_Click(object sender, RoutedEventArgs e) { }
         private void GoalsButton_Click(object sender, RoutedEventArgs e)
