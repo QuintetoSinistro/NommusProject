@@ -103,7 +103,7 @@
                                 HorizontalAlignment="Center"
                                 Margin="0,170,0,0" 
                                 Height="21" 
-                                VerticalAlignment="Top">
+                                VerticalAlignment="Top" Click="Button_Click_1">
 
                             <Button.Style>
                                 <Style TargetType="Button">

@@ -202,7 +202,12 @@
                         <DropShadowEffect Color="#000000" BlurRadius="8" Opacity="0.3" ShadowDepth="2"/>
                     </Border.Effect>
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="40" Height="40" Fill="#2D4A8A"/>
+                        <!-- Substitua o Ellipse por este Border -->
+                        <Border Width="40" Height="40" CornerRadius="20">
+                            <Border.Background>
+                                <ImageBrush x:Name="SidebarFotoBrush" />
+                            </Border.Background>
+                        </Border>
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                             <TextBlock x:Name="UsuarioNomeText" Text="Usuário" FontWeight="SemiBold" FontSize="18" Foreground="#F1F5F9"/>
                         </StackPanel>
@@ -258,7 +263,7 @@
                                                         <TextBlock Text="{Binding DataTransacao, StringFormat='dd/MM/yyyy'}" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
                                                     </StackPanel>
                                                     <TextBlock Grid.Column="1" Text="{Binding ValorTransacao, StringFormat='R$ {0:F2}'}" Foreground="#10B981" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                                                    <Button Grid.Column="2" Content="✕" Background="Transparent" Foreground="#EF4444" FontSize="12" Width="25" Height="25" Click="RemoverReceita_Click" Tag="{Binding Id}"/>
+                                                    <Button Grid.Column="2" Content="✕" Background="Transparent" Foreground="#EF4444" FontSize="12" Width="25" Height="25" Click="RemoverReceita_Click" Tag="{Binding IdTransacao}"/>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -266,7 +271,7 @@
                                 </ItemsControl>
                             </ScrollViewer>
                             <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
-                                <Button Content="Exportar Relatório" Style="{StaticResource ActionButtonStyle}" Margin="0,0,10,0"/>
+                                <Button Content="Exportar Relatório" Style="{StaticResource ActionButtonStyle}" Margin="0,0,10,0" Click="ExportarRelatorio_Click"/>
                                 <Button Content="Previsão Futura" Style="{StaticResource ActionButtonStyle}" Background="#10B981" Click="PlanFutureIncome_Click"/>
                             </StackPanel>
                         </StackPanel>

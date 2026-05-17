@@ -232,11 +232,11 @@
                         <DropShadowEffect Color="#000000" BlurRadius="8" Opacity="0.3" ShadowDepth="2"/>
                     </Border.Effect>
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="40" Height="40">
-                            <Ellipse.Fill>
-                                <SolidColorBrush Color="#2D4A8A"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
+                        <Border Width="40" Height="40" CornerRadius="20">
+                            <Border.Background>
+                                <ImageBrush x:Name="SidebarFotoBrush" />
+                            </Border.Background>
+                        </Border>
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                             <TextBlock x:Name="UsuarioNomeText"
                                        Text="Usuário"
@@ -305,9 +305,9 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Evolução Financeira" FontSize="18" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,0,0,20"/>
-                        <lvc:CartesianChart Grid.Row="1" x:Name="FinanceChart" Background="Transparent"
-                                            DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" LegendLocation="Top">
-                            <lvc:CartesianChart.ChartLegend>
+                        <Grid Grid.Row="1">
+                            <lvc:CartesianChart x:Name="FinanceChart" Background="Transparent" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" LegendLocation="Top">
+                                <lvc:CartesianChart.ChartLegend>
                                 <lvc:DefaultLegend Foreground="White" FontSize="12" Margin="0,10,0,0"/>
                             </lvc:CartesianChart.ChartLegend>
                             <lvc:CartesianChart.Series>
@@ -322,6 +322,8 @@
                                 <lvc:Axis Title="Valor (R$)" LabelFormatter="{Binding Formatter}" Foreground="#94A3B8" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
+                            <TextBlock x:Name="GraficoVazioText" Text="Nenhuma transação registrada" FontSize="16" Foreground="#64748B" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                        </Grid>
                     </Grid>
                 </Border>
 
