@@ -1,19 +1,15 @@
 ﻿using Nommus;
-using NommusProject.Data;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace NommusProject
 {
     public partial class ExpensesWindow : Window
     {
         private ObservableCollection<Transacao> _despesasCollection;
-        private readonly TransacaoRepository _transacaoRepo = new TransacaoRepository();
-        private readonly UsuarioRepository _usuarioRepo = new UsuarioRepository();
 
         public ExpensesWindow()
         {
@@ -57,25 +53,32 @@ namespace NommusProject
             switch (usuario.Tipo)
             {
                 case TipoUsuario.Basic:
-                    UsuarioTipoText.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246)); // Azul
+                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(59, 130, 246)); // Azul
                     break;
                 case TipoUsuario.Premium:
-                    UsuarioTipoText.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Dourado
+                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(245, 158, 11)); // Dourado
                     break;
                 case TipoUsuario.Adm:
-                    UsuarioTipoText.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Vermelho
+                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(239, 68, 68)); // Vermelho
                     break;
             }
         }
 
         // Carrega a lista de despesas do usuário
-        private void CarregarDespesas()
+        private async void CarregarDespesas()
         {
             try
             {
                 if (SessaoUsuario.UsuarioLogado != null)
                 {
-                    var despesas = _transacaoRepo.GetByUsuarioAndTipo(SessaoUsuario.UsuarioLogado.Id, "Despesa");
+                    var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
+                    var despesas = transacoes.Where(t => t.TipoTransacao == "Despesa")
+                                           .OrderByDescending(r => r.DataTransacao)
+                                           .ToList();
+
                     AtualizarListaDespesasUI(despesas);
                     ConfigurarMensagemListaVazia(despesas.Any());
                 }
@@ -124,7 +127,8 @@ namespace NommusProject
             var emptyText = new TextBlock
             {
                 Text = "Nenhum gasto registrado ainda...",
-                Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
+                Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(148, 163, 184)),
                 FontSize = 14,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -134,7 +138,7 @@ namespace NommusProject
         }
 
         // Adiciona uma nova despesa
-        private void AddExpense_Click(object sender, RoutedEventArgs e)
+        private async void AddExpense_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidarCamposDespesa())
                 return;
@@ -144,9 +148,9 @@ namespace NommusProject
                 var (valor, categoria, tipoGasto, data) = ProcessarDadosFormulario();
                 var despesa = CriarNovaDespesa(valor, categoria, tipoGasto, data);
 
-                SalvarDespesa(despesa);
+                await SalvarDespesa(despesa);
                 LimparFormulario();
-                _despesasCollection.Insert(0, despesa);
+                AtualizarListaDespesas(despesa);
             }
             catch (FormatException)
             {
@@ -218,16 +222,20 @@ namespace NommusProject
         }
 
         // Salva a despesa e atualiza o saldo do usuário
-        private void SalvarDespesa(Despesa despesa)
+        private async System.Threading.Tasks.Task SalvarDespesa(Despesa despesa)
         {
-            // Adiciona a transação
-            int id = _transacaoRepo.Add(despesa);
-            despesa.IdTransacao = id;
+            double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
 
-            // Atualiza saldo (subtrai o valor)
-            _usuarioRepo.AtualizarSaldo(SessaoUsuario.UsuarioLogado.Id, despesa.ValorTransacao, adicionar: false);
+            // Adiciona a transação e atualiza o saldo
+            await despesa.AdicionarTransacaoAsync();
 
-            MessageBox.Show($"Gasto adicionado com sucesso!\nSaldo atual: R$ {SessaoUsuario.UsuarioLogado.saldoDisponivel:F2}",
+            // Recarrega usuário atualizado do arquivo
+            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
+            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
+
+            MessageBox.Show($"Gasto adicionado com sucesso!\n" +
+                           $"Saldo antes: R$ {saldoAntes:F2}\n" +
+                           $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
                            "Sucesso",
                            MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -242,8 +250,14 @@ namespace NommusProject
             DateTextBox.Text = DateTime.Today.ToString("dd/MM/yyyy");
         }
 
+        // Adiciona a nova despesa na lista
+        private void AtualizarListaDespesas(Despesa despesa)
+        {
+            _despesasCollection.Insert(0, despesa);
+        }
+
         // Remove uma despesa
-        private void RemoverDespesa_Click(object sender, RoutedEventArgs e)
+        private async void RemoverDespesa_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is Transacao transacao)
             {
@@ -256,10 +270,7 @@ namespace NommusProject
 
                     if (resultado == MessageBoxResult.Yes)
                     {
-                        _transacaoRepo.Delete(transacao.IdTransacao);
-                        // Devolve o valor ao saldo
-                        _usuarioRepo.AtualizarSaldo(SessaoUsuario.UsuarioLogado.Id, transacao.ValorTransacao, adicionar: true);
-                        CarregarDespesas();
+                        await ExcluirDespesa(transacao);
                     }
                 }
                 catch (Exception ex)
@@ -268,6 +279,28 @@ namespace NommusProject
                                   MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        // Exclui uma despesa e atualiza o saldo
+        private async System.Threading.Tasks.Task ExcluirDespesa(Transacao transacao)
+        {
+            double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
+
+            // Remove a transação e atualiza o saldo
+            await transacao.ExcluirTransacaoAsync();
+
+            // Recarrega usuário atualizado do arquivo
+            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
+            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
+
+            // Recarrega a lista
+            CarregarDespesas();
+
+            MessageBox.Show($"Gasto removido com sucesso!\n" +
+                          $"Saldo antes: R$ {saldoAntes:F2}\n" +
+                          $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
+                          "Sucesso",
+                          MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         // Mostra/oculta o painel de planejamento futuro

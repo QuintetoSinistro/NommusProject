@@ -611,8 +611,3 @@ $RECYCLE.BIN/
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,dotnetcore,windows
-
-# implementação futura do Firebase | Chaves de API e configurações sensíveis
-**/Secrets/**
-*.secret.config
-**/firebase-credentials.json

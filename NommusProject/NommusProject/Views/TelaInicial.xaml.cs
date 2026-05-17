@@ -1,38 +1,31 @@
-﻿using System;
-using NommusProject.Data;
-using Nommus;
+﻿using NommusProject;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using LiveCharts;
 using LiveCharts.Wpf;
 
-namespace NommusProject
+namespace Nommus
 {
     public partial class MainWindow : Window
     {
-        private readonly TransacaoRepository _transacaoRepo = new TransacaoRepository();
+        private Usuario _usuarioLogado;
 
         public MainWindow()
         {
             InitializeComponent();
-            // Obtém usuário logado da sessão estática
-            if (SessaoUsuario.UsuarioLogado == null)
-            {
-                MessageBox.Show("Usuário não está logado!", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-                // Opcional: redirecionar para login
-                new UserLogin().Show();
-                this.Close();
-                return;
-            }
 
+            // Obtém usuário da sessão e carrega dados
+            _usuarioLogado = SessaoUsuario.UsuarioLogado;
             CarregarDadosUsuario();
             CarregarEstatisticas();
             CarregarDadosGrafico();
         }
 
-        // Classe para gerenciar dados do gráfico (mantida para compatibilidade com LiveCharts)
+        // Classe para gerenciar dados do gráfico
         public class ChartViewModel
         {
             public SeriesCollection SeriesCollection { get; set; }
@@ -45,73 +38,90 @@ namespace NommusProject
             }
         }
 
-        // Carrega e exibe os dados do usuário logado na sidebar
+        // Carrega e exibe os dados do usuário logado
         private void CarregarDadosUsuario()
         {
-            var usuario = SessaoUsuario.UsuarioLogado;
-            if (usuario == null) return;
-
-            ConfigurarPerfilUsuario(usuario);
-            ConfigurarSaldoUsuario(usuario);
+            if (_usuarioLogado != null)
+            {
+                ConfigurarPerfilUsuario();
+                ConfigurarSaldoUsuario();
+            }
+            else
+            {
+                MessageBox.Show("Usuário não encontrado na sessão!", "Erro",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void ConfigurarPerfilUsuario(Usuarios usuario)
+        // Configura o perfil do usuário na sidebar
+        private void ConfigurarPerfilUsuario()
         {
             var nomeTextBlock = FindName("UsuarioNomeText") as TextBlock;
             var tipoTextBlock = FindName("UsuarioTipoText") as TextBlock;
 
             if (nomeTextBlock != null)
-                nomeTextBlock.Text = usuario.Nome;
+                nomeTextBlock.Text = _usuarioLogado.Nome;
 
             if (tipoTextBlock != null)
             {
-                tipoTextBlock.Text = usuario.Tipo.ToString();
-                ConfigurarCorTipoUsuario(tipoTextBlock, usuario);
+                tipoTextBlock.Text = _usuarioLogado.Tipo.ToString();
+                ConfigurarCorTipoUsuario(tipoTextBlock);
             }
         }
 
-        private void ConfigurarCorTipoUsuario(TextBlock tipoTextBlock, Usuarios usuario)
+        // Define a cor do tipo de usuário
+        private void ConfigurarCorTipoUsuario(TextBlock tipoTextBlock)
         {
-            switch (usuario.Tipo)
+            switch (_usuarioLogado.Tipo)
             {
                 case TipoUsuario.Basic:
-                    tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246));
+                    tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(59, 130, 246)); // Azul
                     break;
                 case TipoUsuario.Premium:
-                    tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11));
+                    tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Dourado
                     break;
                 case TipoUsuario.Adm:
-                    tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68));
+                    tipoTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Vermelho
                     break;
             }
         }
 
-        private void ConfigurarSaldoUsuario(Usuarios usuario)
+        // Configura a exibição do saldo do usuário
+        private void ConfigurarSaldoUsuario()
         {
             if (BalanceText != null)
             {
-                BalanceText.Text = $"R$ {usuario.saldoDisponivel:F2}";
-                ConfigurarCorSaldo(usuario);
+                BalanceText.Text = $"R$ {_usuarioLogado.saldoDisponivel:F2}";
+                ConfigurarCorSaldo();
+            }
+            else
+            {
+                MessageBox.Show("BalanceText não encontrado!", "Erro",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void ConfigurarCorSaldo(Usuarios usuario)
+        // Define a cor do saldo (verde para positivo, vermelho para negativo)
+        private void ConfigurarCorSaldo()
         {
-            if (BalanceText == null) return;
-            BalanceText.Foreground = usuario.saldoDisponivel >= 0
-                ? new SolidColorBrush(Color.FromRgb(34, 197, 94))   // Verde
-                : new SolidColorBrush(Color.FromRgb(239, 68, 68));   // Vermelho
+            if (_usuarioLogado.saldoDisponivel >= 0)
+            {
+                BalanceText.Foreground = new SolidColorBrush(Color.FromRgb(34, 197, 94)); // Verde
+            }
+            else
+            {
+                BalanceText.Foreground = new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Vermelho
+            }
         }
 
-        // Carrega as estatísticas de receitas e despesas
+        // Carrega estatísticas de receitas e despesas
         private async void CarregarEstatisticas()
         {
             if (SessaoUsuario.UsuarioLogado == null) return;
 
             try
             {
-                var transacoes = await Task.Run(() =>
-                    _transacaoRepo.GetByUsuario(SessaoUsuario.UsuarioLogado.Id));
+                var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
 
                 if (transacoes.Any())
                 {
@@ -129,6 +139,7 @@ namespace NommusProject
             }
         }
 
+        // Calcula totais de receitas e despesas
         private void CalcularTotaisTransacoes(List<Transacao> transacoes)
         {
             var totalReceitas = transacoes
@@ -143,6 +154,7 @@ namespace NommusProject
             MaxDespesaText.Text = $"R$ {totalDespesas:F2}";
         }
 
+        // Exibe valores zerados quando não há transações
         private void ExibirTotaisZerados()
         {
             MaxReceitaText.Text = "R$ 0,00";
@@ -156,9 +168,7 @@ namespace NommusProject
 
             try
             {
-                var transacoes = await Task.Run(() =>
-                    _transacaoRepo.GetByUsuario(SessaoUsuario.UsuarioLogado.Id));
-
+                var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
                 var dadosPorMes = AgruparTransacoesPorMes(transacoes);
 
                 if (!dadosPorMes.Any())
@@ -175,6 +185,7 @@ namespace NommusProject
             }
         }
 
+        // Agrupa transações por mês para o gráfico
         private List<DadosMes> AgruparTransacoesPorMes(List<Transacao> transacoes)
         {
             return transacoes
@@ -189,6 +200,7 @@ namespace NommusProject
                 .ToList();
         }
 
+        // Atualiza o gráfico com os dados processados
         private void AtualizarGrafico(List<DadosMes> dadosPorMes)
         {
             var (saldoValues, receitaValues, despesaValues, labels) = ProcessarDadosGrafico(dadosPorMes);
@@ -224,6 +236,7 @@ namespace NommusProject
             ConfigurarEixosGrafico(labels);
         }
 
+        // Processa dados para o gráfico calculando saldo acumulado
         private (ChartValues<double>, ChartValues<double>, ChartValues<double>, List<string>)
             ProcessarDadosGrafico(List<DadosMes> dadosPorMes)
         {
@@ -237,6 +250,7 @@ namespace NommusProject
             foreach (var mes in dadosPorMes)
             {
                 saldoAcumulado += (mes.Receitas - mes.Despesas);
+
                 saldoValues.Add(saldoAcumulado);
                 receitaValues.Add(mes.Receitas);
                 despesaValues.Add(mes.Despesas);
@@ -246,6 +260,7 @@ namespace NommusProject
             return (saldoValues, receitaValues, despesaValues, labels);
         }
 
+        // Configura os eixos X e Y do gráfico
         private void ConfigurarEixosGrafico(List<string> labels)
         {
             FinanceChart.AxisX.Clear();
@@ -265,19 +280,23 @@ namespace NommusProject
             });
         }
 
-        // Métodos de navegação
+        // Métodos de navegação entre telas
+
+        // Navegação para Finanças (já está na tela principal)
         private void FinanceButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Você já está na tela principal", "Informação",
                           MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // Navegação para Cartões (a implementar)
         private void CardsButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Navegar para Cartões", "Navegação",
                           MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // Navegação para Despesas
         private void ExpensesButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -293,6 +312,7 @@ namespace NommusProject
             }
         }
 
+        // Navegação para Receitas
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
             IncomeWindow incomeWindow = new IncomeWindow();
@@ -300,12 +320,14 @@ namespace NommusProject
             this.Close();
         }
 
+        // Navegação para Metas (a implementar)
         private void GoalsButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Navegar para Metas", "Navegação",
                           MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // Navegação para Relatórios (a implementar)
         private void ReportsButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO: Implementar tela de Relatórios

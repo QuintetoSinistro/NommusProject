@@ -29,7 +29,7 @@ namespace NommusProject
             try
             {
                 // Busca usuário no banco de dados pelo email
-                var usuario = await Usuarios.BuscarUsuarioPorEmailAsync(email);
+                var usuario = await Usuario.BuscarUsuarioPorEmailAsync(email);
 
                 // Verifica se usuário existe
                 if (usuario == null)

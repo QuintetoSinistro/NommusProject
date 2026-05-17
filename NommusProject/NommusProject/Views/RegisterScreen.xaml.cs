@@ -62,7 +62,7 @@ namespace NommusProject
             try
             {
                 // Verifica se o email já está cadastrado
-                var usuarioExistente = await Usuarios.BuscarUsuarioPorEmailAsync(EmailTextBox.Text.Trim());
+                var usuarioExistente = await Usuario.BuscarUsuarioPorEmailAsync(EmailTextBox.Text.Trim());
                 if (usuarioExistente != null)
                 {
                     MessageBox.Show("Este email já está cadastrado.", "Atenção",
@@ -71,7 +71,7 @@ namespace NommusProject
                 }
 
                 // Cria novo usuário
-                var novoUsuario = new Usuarios
+                var novoUsuario = new Usuario
                 {
                     Nome = NameTextBox.Text.Trim(),
                     Email = EmailTextBox.Text.Trim(),
@@ -82,7 +82,7 @@ namespace NommusProject
                 };
 
                 // Salva o usuário no banco de dados
-                bool salvou = await novoUsuario.SalvarAsync();
+                bool salvou = await novoUsuario.SalvarUsuarioAsync();
 
                 if (salvou)
                 {
