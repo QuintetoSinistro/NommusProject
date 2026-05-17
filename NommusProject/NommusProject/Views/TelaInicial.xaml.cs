@@ -53,7 +53,16 @@ namespace NommusProject
             // Carrega os dados para o gráfico de evolução financeira
             CarregarDadosGrafico();
 
+            this.Activated += MainWindow_Activated;
             this.Closed += (s, e) => DatabaseBackup.CriarBackup();
+        }
+
+        private void MainWindow_Activated(object sender, EventArgs e)
+        {
+            // Recarrega os dados sempre que a janela for ativada
+            CarregarDadosUsuario();      // recarrega nome, saldo etc.
+            CarregarEstatisticas();      // recarrega totais
+            CarregarDadosGrafico();      // recarrega o gráfico
         }
 
         // ============================================================
@@ -216,31 +225,27 @@ namespace NommusProject
             {
                 var transacoes = await Task.Run(() =>
                     _transacaoRepo.GetByUsuario(SessaoUsuario.UsuarioLogado.Id));
-
                 var dadosPorMes = AgruparTransacoesPorMes(transacoes);
 
-                // Se não houver dados, limpa as séries do gráfico
-                if (!dadosPorMes.Any())
+                if (dadosPorMes == null || !dadosPorMes.Any())
                 {
-                    FinanceChart.Series = new SeriesCollection();
-                    // Exibir uma mensagem dentro do gráfico (texto centralizado)
-                    var emptyMessage = new CartesianChart
-                    {
-                        Series = new SeriesCollection(),
-                        AxisX = { new Axis { Labels = new[] { "" } } },
-                        AxisY = { new Axis { LabelFormatter = value => "" } }
-                    };
-                    // Não há suporte direto, mas podemos adicionar um TextBlock sobreposto.
-                    // Alternativa mais simples: mostrar MessageBox.
-                    MessageBox.Show("Nenhuma transação encontrada para exibir no gráfico.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Sem dados: esconde gráfico, mostra mensagem
+                    GraficoVazioText.Visibility = Visibility.Visible;
+                    FinanceChart.Visibility = Visibility.Collapsed;
+                    FinanceChart.Series = new SeriesCollection(); // limpa séries
                     return;
                 }
 
+                // Com dados: mostra gráfico, esconde mensagem
+                GraficoVazioText.Visibility = Visibility.Collapsed;
+                FinanceChart.Visibility = Visibility.Visible;
                 AtualizarGrafico(dadosPorMes);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao carregar gráfico: {ex.Message}");
+                GraficoVazioText.Visibility = Visibility.Visible;
+                FinanceChart.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -292,6 +297,7 @@ namespace NommusProject
                 }
             };
 
+                
             AtualizarEstadoGrafico(dadosPorMes.Any());
             ConfigurarEixosGrafico(labels);
         }
