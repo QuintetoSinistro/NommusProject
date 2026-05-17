@@ -228,11 +228,11 @@
                 <!-- Card usuário -->
                 <Border Grid.Row="2" Background="#1A2340" Margin="12,0,12,16" CornerRadius="16" Padding="14">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="40" Height="40">
-                            <Ellipse.Fill>
-                                <SolidColorBrush Color="#2D4A8A"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
+                        <!-- Ícone de usuário (sem imagem) -->
+                        <Border Width="40" Height="40" CornerRadius="20" Background="#2D4A8A">
+                            <TextBlock Text="👤" FontSize="24" Foreground="White" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                             <TextBlock x:Name="SidebarNomeText" Text="Usuário" FontWeight="SemiBold" FontSize="18" Foreground="#F1F5F9"/>
                         </StackPanel>
@@ -278,6 +278,7 @@
                     <StackPanel>
 
                         <!-- Foto -->
+                        <!-- Foto -->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -285,19 +286,14 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Foto do Perfil" FontSize="16" FontWeight="Bold" Foreground="#F1F5F9" Margin="0,0,0,16"/>
-                                <Ellipse Width="90" Height="90" HorizontalAlignment="Left">
-                                    <Ellipse.Fill>
-                                        <SolidColorBrush Color="#2D3A6B"/>
-                                    </Ellipse.Fill>
-                                    <Ellipse.Stroke>
-                                        <SolidColorBrush Color="#4B5EAA"/>
-                                    </Ellipse.Stroke>
-                                    <Ellipse.StrokeThickness>2</Ellipse.StrokeThickness>
-                                </Ellipse>
+                                <Border Width="90" Height="90" CornerRadius="45" HorizontalAlignment="Left" >
+                                    <Border.Background>
+                                        <ImageBrush x:Name="FotoPerfilBrush" />
+                                    </Border.Background>
+                                    <TextBlock x:Name="FotoFallbackText" Text="👤" FontSize="40" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
                             </StackPanel>
-                            <Button Grid.Column="1" Content="Alterar Foto"
-                                    Style="{StaticResource AlterarFotoButtonStyle}"
-                                    VerticalAlignment="Bottom" Click="AlterarFoto_Click"/>
+                            <Button Grid.Column="1" Content="Alterar Foto" Style="{StaticResource AlterarFotoButtonStyle}" VerticalAlignment="Bottom" Click="AlterarFoto_Click"/>
                         </Grid>
 
                         <Rectangle Height="1" Fill="#3D1A6B" Margin="0,24,0,24"/>

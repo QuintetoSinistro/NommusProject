@@ -196,11 +196,11 @@
                 <Border Grid.Row="2" Background="#1A2340" Margin="12,0,12,16" CornerRadius="16" Padding="14"
                         Cursor="Hand" MouseLeftButtonDown="UsuarioCard_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="40" Height="40">
-                            <Ellipse.Fill>
-                                <SolidColorBrush Color="#2D4A8A"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
+                        <Border Width="40" Height="40" CornerRadius="20">
+                            <Border.Background>
+                                <ImageBrush x:Name="SidebarFotoBrush" />
+                            </Border.Background>
+                        </Border>
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                             <TextBlock x:Name="UsuarioNomeText" Text="Usuário" FontWeight="SemiBold" FontSize="16" Foreground="#F1F5F9"/>
                         </StackPanel>
@@ -233,8 +233,8 @@
                     </StackPanel>
                     <Button Grid.Column="1" Content="+ Adicionar Cartão"
                             Style="{StaticResource AddButtonStyle}"
-                            VerticalAlignment="Center"
-                            Click="AdicionarCartao_Click"/>
+                            VerticalAlignment="Bottom"
+                            Click="AdicionarCartao_Click" Margin="0,0,0,8"/>
                 </Grid>
 
                 <!-- Lista de cartões + estado vazio -->

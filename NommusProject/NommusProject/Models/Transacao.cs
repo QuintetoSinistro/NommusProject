@@ -1,4 +1,12 @@
-﻿namespace NommusProject
+﻿using NommusProject.Data;
+using Microsoft.Data.Sqlite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace NommusProject
 {
     public class Transacao
     {
@@ -15,7 +23,7 @@
 
         // Relacionamentos
         public int UsuarioId { get; set; }
-        public string CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
         public int? CartaoId { get; set; }
         public bool TransacaoFixa { get; set; } = false;
     }
