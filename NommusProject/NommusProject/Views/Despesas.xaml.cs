@@ -1,457 +1,389 @@
-﻿using Nommus;
+﻿using Microsoft.Data.Sqlite;
+using Nommus;           // ATENÇÃO: namespace inconsistente (deveria ser NommusProject)
+using NommusProject.Data;
+using NommusProject.Utils;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
 namespace NommusProject
 {
+    // Tela de gerenciamento de despesas (gastos)
     public partial class ExpensesWindow : Window
     {
-        private ObservableCollection<Transacao> _despesasCollection;
+        // Controla se o popup do usuário está visível
+        private bool _popupAberto = false;
 
+        // Repositório de transações para acesso ao banco de dados
+        private TransacaoRepository _transacaoRepo = new TransacaoRepository();
+
+        // Lista em memória das despesas carregadas (usada para exibição e exclusão em lote)
+        private List<Transacao> _despesas = new List<Transacao>();
+
+        // Construtor: inicializa os componentes, carrega dados do usuário,
+        // categorias, despesas e cartões.
         public ExpensesWindow()
         {
             InitializeComponent();
-            InicializarComponentes();
+            Utils.MaskHelper.AplicarMascaraValor(ValueTextBox);
             CarregarDadosUsuario();
+            CarregarCategorias();
             CarregarDespesas();
+            CarregarCartoes();
         }
 
-        // Inicializa os componentes da tela
-        private void InicializarComponentes()
-        {
-            _despesasCollection = new ObservableCollection<Transacao>();
-            DespesasItemsControl.ItemsSource = _despesasCollection;
-        }
+        // ============================================================
+        // DADOS DO USUÁRIO (sidebar e popup)
+        // ============================================================
 
-        // Carrega e exibe os dados do usuário logado
+        // Carrega nome e email do usuário logado nos controles da tela
         private void CarregarDadosUsuario()
-        {
-            if (SessaoUsuario.UsuarioLogado != null)
-            {
-                var usuario = SessaoUsuario.UsuarioLogado;
-
-                if (UsuarioNomeText != null)
-                    UsuarioNomeText.Text = usuario.Nome;
-
-                if (UsuarioTipoText != null)
-                {
-                    UsuarioTipoText.Text = usuario.Tipo.ToString();
-                    ConfigurarCorTipoUsuario();
-                }
-            }
-        }
-
-        // Define a cor do tipo de usuário na sidebar
-        private void ConfigurarCorTipoUsuario()
         {
             var usuario = SessaoUsuario.UsuarioLogado;
             if (usuario == null) return;
+            UsuarioNomeText.Text = usuario.Nome;
+            PopupNomeText.Text = usuario.Nome;
+            PopupEmailText.Text = usuario.Email;
 
-            switch (usuario.Tipo)
-            {
-                case TipoUsuario.Basic:
-                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(59, 130, 246)); // Azul
-                    break;
-                case TipoUsuario.Premium:
-                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(245, 158, 11)); // Dourado
-                    break;
-                case TipoUsuario.Adm:
-                    UsuarioTipoText.Foreground = new System.Windows.Media.SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(239, 68, 68)); // Vermelho
-                    break;
-            }
+            // Carrega a foto
+            CarregarFotoSidebar(usuario.FotoPerfil);
         }
 
-        // Carrega a lista de despesas do usuário
-        private async void CarregarDespesas()
+        private void CarregarFotoSidebar(string caminhoFoto)
         {
             try
             {
-                if (SessaoUsuario.UsuarioLogado != null)
+                if (!string.IsNullOrEmpty(caminhoFoto) && System.IO.File.Exists(caminhoFoto))
                 {
-                    var transacoes = await Transacao.CarregarTransacoesPorUsuarioAsync(SessaoUsuario.UsuarioLogado.Id);
-                    var despesas = transacoes.Where(t => t.TipoTransacao == "Despesa")
-                                           .OrderByDescending(r => r.DataTransacao)
-                                           .ToList();
-
-                    AtualizarListaDespesasUI(despesas);
-                    ConfigurarMensagemListaVazia(despesas.Any());
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(caminhoFoto, UriKind.Absolute);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    SidebarFotoBrush.ImageSource = bitmap;
+                }
+                else
+                {
+                    var defaultUri = new Uri("pack://application:,,,/Views/Images/user.png", UriKind.Absolute);
+                    SidebarFotoBrush.ImageSource = new BitmapImage(defaultUri);
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao carregar despesas: {ex.Message}", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            catch { SidebarFotoBrush.ImageSource = null; }
         }
 
-        // Atualiza a interface com a lista de despesas
-        private void AtualizarListaDespesasUI(System.Collections.Generic.List<Transacao> despesas)
-        {
-            _despesasCollection.Clear();
-            foreach (var despesa in despesas)
-            {
-                _despesasCollection.Add(despesa);
-            }
-        }
+        // ============================================================
+        // CARREGAMENTO DE CATEGORIAS (do banco de dados)
+        // ============================================================
 
-        // Configura mensagem quando a lista está vazia
-        private void ConfigurarMensagemListaVazia(bool temDespesas)
+        // Preenche o ComboBox de categorias com os registros da tabela Categorias.
+        // Se não houver categorias, adiciona "Outros" como padrão.
+        private void CarregarCategorias()
         {
-            var stackPanel = DespesasItemsControl.Parent as StackPanel;
-            if (stackPanel != null)
-            {
-                var emptyTextBlock = stackPanel.Children
-                    .OfType<TextBlock>()
-                    .FirstOrDefault(tb => tb.Text.Contains("Nenhum gasto"));
-
-                if (!temDespesas && emptyTextBlock == null)
-                {
-                    AdicionarMensagemListaVazia(stackPanel);
-                }
-                else if (temDespesas && emptyTextBlock != null)
-                {
-                    stackPanel.Children.Remove(emptyTextBlock);
-                }
-            }
-        }
-
-        // Adiciona mensagem de lista vazia
-        private void AdicionarMensagemListaVazia(StackPanel stackPanel)
-        {
-            var emptyText = new TextBlock
-            {
-                Text = "Nenhum gasto registrado ainda...",
-                Foreground = new System.Windows.Media.SolidColorBrush(
-                    System.Windows.Media.Color.FromRgb(148, 163, 184)),
-                FontSize = 14,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 20, 0, 0)
-            };
-            stackPanel.Children.Add(emptyText);
-        }
-
-        // Adiciona uma nova despesa
-        private async void AddExpense_Click(object sender, RoutedEventArgs e)
-        {
-            if (!ValidarCamposDespesa())
-                return;
+            CategoryComboBox.Items.Clear();
+            // Opção padrão "Outros" com Tag = null (representa categoria não informada)
+            CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Outros", Tag = null });
 
             try
             {
-                var (valor, categoria, tipoGasto, data) = ProcessarDadosFormulario();
-                var despesa = CriarNovaDespesa(valor, categoria, tipoGasto, data);
+                using var conn = new SqliteConnection($"Data Source={DatabaseInitializer.DbPath}");
+                conn.Open();
+                using var cmd = new SqliteCommand("SELECT IdCategoria, NomeCategoria FROM Categorias ORDER BY NomeCategoria", conn);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var id = reader.GetInt32(0);
+                    var nome = reader.GetString(1);
+                    // Armazena o IdCategoria no Tag do item
+                    CategoryComboBox.Items.Add(new ComboBoxItem { Content = nome, Tag = id });
+                }
+            }
+            catch
+            {
+                // Se a tabela Categorias não existir ou der erro, apenas ignora
+            }
 
-                await SalvarDespesa(despesa);
-                LimparFormulario();
-                AtualizarListaDespesas(despesa);
-            }
-            catch (FormatException)
+            // Garante que haja pelo menos um item
+            if (CategoryComboBox.Items.Count == 0)
+                CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Outros", Tag = null });
+
+            CategoryComboBox.SelectedIndex = 0;
+        }
+
+        // ============================================================
+        // CARREGAMENTO DE DESPESAS
+        // ============================================================
+
+        // Busca todas as despesas do usuário no banco e as exibe no ItemsControl
+        private void CarregarDespesas()
+        {
+            var usuarioId = SessaoUsuario.UsuarioLogado?.Id ?? 0;
+            _despesas = _transacaoRepo.GetByUsuarioAndTipo(usuarioId, "Despesa");
+            DespesasItemsControl.ItemsSource = _despesas;
+        }
+
+        // ============================================================
+        // CARREGAMENTO DE CARTÕES (para pagamento com crédito)
+        // ============================================================
+
+        // Preenche o ComboBox de cartões com os cartões cadastrados pelo usuário.
+        // O primeiro item é "Nenhum" (Tag = null), indicando que não será associado a cartão.
+        private void CarregarCartoes()
+        {
+            CardComboBox.Items.Clear();
+            CardComboBox.Items.Add(new ComboBoxItem { Content = "Nenhum", Tag = null });
+
+            var cartaoRepo = new CartaoRepository();
+            var cartoes = cartaoRepo.GetByUsuario(SessaoUsuario.UsuarioLogado.Id);
+            foreach (var c in cartoes)
             {
-                MessageBox.Show("Por favor, insira um valor numérico válido.", "Atenção",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
+                CardComboBox.Items.Add(new ComboBoxItem { Content = c.NomeCartao, Tag = c.IdCartao });
             }
-            catch (Exception ex)
+            CardComboBox.SelectedIndex = 0;
+        }
+
+        // ============================================================
+        // INTERAÇÃO ENTRE MEIO DE PAGAMENTO E SELEÇÃO DE CARTÃO
+        // ============================================================
+
+        // Quando o usuário seleciona "Crédito" como meio de pagamento, habilita o ComboBox de cartões;
+        // caso contrário, desabilita e seleciona "Nenhum".
+        private void PaymentMethodComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (PaymentMethodComboBox.SelectedItem is ComboBoxItem item)
             {
-                MessageBox.Show($"Erro ao adicionar gasto: {ex.Message}", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
+                bool isCredito = item.Content.ToString() == "Crédito";
+                CardComboBox.IsEnabled = isCredito;
+                if (!isCredito) CardComboBox.SelectedIndex = 0;
             }
         }
 
-        // Valida os campos do formulário de despesa
-        private bool ValidarCamposDespesa()
+        // ============================================================
+        // ADIÇÃO DE NOVA DESPESA
+        // ============================================================
+
+        // Evento do botão "Adicionar Gasto": valida os campos, cria um objeto Transacao
+        // e salva no banco de dados.
+        private void AddExpense_Click(object sender, RoutedEventArgs e)
         {
+            // Validação da descrição
             if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text))
             {
-                MessageBox.Show("Por favor, insira uma descrição para o gasto.", "Atenção",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
+                MessageBox.Show("Informe a descrição.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            if (string.IsNullOrWhiteSpace(ValueTextBox.Text) || ValueTextBox.Text == "0,00")
+            // Validação do valor (deve ser número positivo, formato "100,50")
+            if (!double.TryParse(ValueTextBox.Text, out double valor) || valor <= 0)
             {
-                MessageBox.Show("Por favor, insira um valor válido para o gasto.", "Atenção",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
+                MessageBox.Show("Valor inválido.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            return true;
-        }
+            // Validação da data (se inválida, usa a data atual)
+            if (!DateTime.TryParse(DateTextBox.Text, out DateTime data))
+                data = DateTime.Today;
 
-        // Processa e converte os dados do formulário
-        private (double valor, string categoria, string tipoGasto, DateTime data) ProcessarDadosFormulario()
-        {
-            // Converter valor
-            decimal valorDecimal = Convert.ToDecimal(ValueTextBox.Text.Replace("R$", "").Trim());
-            double valor = (double)valorDecimal;
+            // Obtém o ID da categoria selecionada (Tag do ComboBoxItem)
+            // Se não for um número inteiro ou não houver seleção, categoriaId permanece null
+            int? categoriaId = null;
+            if (CategoryComboBox.SelectedItem is ComboBoxItem catItem && catItem.Tag is int catId)
+            {
+                categoriaId = catId;
+            }
 
-            // Obter categoria selecionada
-            string categoria = (CategoryComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Outros";
+            // Define o tipo de gasto com base nos RadioButtons
+            string tipoGasto = FixedRadio.IsChecked == true ? "Fixo" : (VariableRadio.IsChecked == true ? "Variável" : "Emergência");
 
-            // Obter tipo de gasto
-            string tipoGasto = "Fixo";
-            if (VariableRadio.IsChecked == true) tipoGasto = "Variável";
-            if (EmergencyRadio.IsChecked == true) tipoGasto = "Emergência";
+            // Forma de pagamento selecionada
+            string formaPagamento = (PaymentMethodComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Débito";
 
-            // Converter data
-            DateTime data = DateTime.Parse(DateTextBox.Text);
+            // Se for crédito e houver um cartão válido (Tag > 0), associa o cartão
+            int? cartaoId = null;
+            if (formaPagamento == "Crédito" && CardComboBox.SelectedItem is ComboBoxItem cardItem && cardItem.Tag is int cardId && cardId > 0)
+            {
+                cartaoId = cardId;
+            }
 
-            return (valor, categoria, tipoGasto, data);
-        }
-
-        // Cria um novo objeto Despesa
-        private Despesa CriarNovaDespesa(double valor, string categoria, string tipoGasto, DateTime data)
-        {
-            return new Despesa
+            // Cria o objeto Transacao do tipo Despesa
+            var despesa = new Transacao
             {
                 DescricaoTransacao = DescriptionTextBox.Text,
+                TipoTransacao = "Despesa",
                 ValorTransacao = valor,
-                CategoriaId = categoria.ToLower().Replace(" ", "-"),
                 DataTransacao = data,
-                DespesaRecorrente = tipoGasto == "Fixo",
-                DespesaEssencial = tipoGasto != "Emergência",
+                FormaPagamento = formaPagamento,
+                CategoriaId = categoriaId,          // Pode ser null (NULL no banco)
+                CartaoId = cartaoId,                // Pode ser null
                 UsuarioId = SessaoUsuario.UsuarioLogado.Id,
-                TipoTransacao = "Despesa"
+                CondicaoPagamento = tipoGasto
             };
+
+            // Salva no banco via repositório
+            _transacaoRepo.Add(despesa);
+
+            // Limpa o formulário e recarrega a lista
+            LimparFormulario();
+            CarregarDespesas();
         }
 
-        // Salva a despesa e atualiza o saldo do usuário
-        private async System.Threading.Tasks.Task SalvarDespesa(Despesa despesa)
+        // ============================================================
+        // EXCLUSÃO DE DESPESA INDIVIDUAL
+        // ============================================================
+
+        // Evento disparado pelo botão "✕" em cada item da lista.
+        // O Tag do botão contém o IdTransacao a ser removido.
+        private void RemoverDespesa_Click(object sender, RoutedEventArgs e)
         {
-            double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
-
-            // Adiciona a transação e atualiza o saldo
-            await despesa.AdicionarTransacaoAsync();
-
-            // Recarrega usuário atualizado do arquivo
-            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
-            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
-
-            MessageBox.Show($"Gasto adicionado com sucesso!\n" +
-                           $"Saldo antes: R$ {saldoAntes:F2}\n" +
-                           $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
-                           "Sucesso",
-                           MessageBoxButton.OK, MessageBoxImage.Information);
+            if (sender is Button btn && btn.Tag is int id)
+            {
+                if (MessageBox.Show("Remover esta despesa?", "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    _transacaoRepo.Delete(id);
+                    CarregarDespesas();
+                }
+            }
         }
 
-        // Limpa os campos do formulário
+        // ============================================================
+        // EXCLUSÃO DE TODAS AS DESPESAS
+        // ============================================================
+
+        // Remove todas as despesas do usuário (com confirmação)
+        private void ClearAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Excluir TODAS as despesas?", "Atenção", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                foreach (var d in _despesas)
+                    _transacaoRepo.Delete(d.IdTransacao);
+                CarregarDespesas();
+            }
+        }
+
+        // ============================================================
+        // FILTRO E EXPORTAÇÃO
+        // ============================================================
+
+        // Abre uma tela de filtro
+        private void FilterExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            // Popup simples para selecionar período
+            var inputDialog = new Window
+            {
+                Title = "Filtrar Despesas",
+                Width = 300,
+                Height = 200,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Content = new StackPanel
+                {
+                    Margin = new Thickness(10),
+                    Children =
+            {
+                new TextBlock { Text = "Data inicial (dd/MM/yyyy):", Margin = new Thickness(0,0,0,5) },
+                new TextBox { Name = "DataInicioBox", Text = DateTime.Now.AddMonths(-1).ToString("dd/MM/yyyy") },
+                new TextBlock { Text = "Data final (dd/MM/yyyy):", Margin = new Thickness(0,10,0,5) },
+                new TextBox { Name = "DataFimBox", Text = DateTime.Now.ToString("dd/MM/yyyy") },
+                new Button { Content = "Filtrar", Height = 30, Margin = new Thickness(0,15,0,0) }
+            }
+                }
+            };
+            var btn = (inputDialog.Content as StackPanel).Children[4] as Button;
+            btn.Click += (s, args) =>
+            {
+                var dataInicioBox = (inputDialog.Content as StackPanel).Children[1] as TextBox;
+                var dataFimBox = (inputDialog.Content as StackPanel).Children[3] as TextBox;
+
+                if (DateTime.TryParseExact(dataInicioBox?.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var inicio) &&
+                    DateTime.TryParseExact(dataFimBox?.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var fim))
+                {
+                    _despesas = _despesas.Where(d => d.DataTransacao >= inicio && d.DataTransacao <= fim).ToList();
+                    DespesasItemsControl.ItemsSource = _despesas;
+                    inputDialog.Close();
+                }
+                else
+                    MessageBox.Show("Datas inválidas.", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+            };
+            inputDialog.Owner = this;
+            inputDialog.ShowDialog();
+        }
+
+        // Exporta a lista de despesas para um arquivo CSV
+        private void ExportReport_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            dialog.FileName = $"Despesas_{DateTime.Now:yyyyMMddHHmmss}.csv";
+            if (dialog.ShowDialog() == true)
+            {
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine("Descrição;Valor;Data;Categoria");
+                foreach (var d in _despesas)
+                    sb.AppendLine($"{d.DescricaoTransacao};{d.ValorTransacao:F2};{d.DataTransacao:dd/MM/yyyy};{d.CategoriaId}");
+                System.IO.File.WriteAllText(dialog.FileName, sb.ToString());
+                MessageBox.Show("Relatório exportado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        // ============================================================
+        // PLANEJAMENTO DE GASTOS FUTUROS (simulado)
+        // ============================================================
+
+        // Salva um plano de gasto futuro (apenas simulação – não persiste no banco)
+        private void SaveFuturePlan_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Planejamento futuro salvo (simulação).", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // ============================================================
+        // UTILITÁRIOS
+        // ============================================================
+
+        // Limpa os campos do formulário de adição de despesa
         private void LimparFormulario()
         {
             DescriptionTextBox.Text = "";
             ValueTextBox.Text = "0,00";
-            CategoryComboBox.SelectedIndex = -1;
-            FixedRadio.IsChecked = true;
             DateTextBox.Text = DateTime.Today.ToString("dd/MM/yyyy");
+            CategoryComboBox.SelectedIndex = 0;      // Seleciona "Outros"
+            PaymentMethodComboBox.SelectedIndex = 0;  // Seleciona "Selecione..." (ou primeiro item)
+            FixedRadio.IsChecked = true;              // Marca "Fixo" como padrão
         }
 
-        // Adiciona a nova despesa na lista
-        private void AtualizarListaDespesas(Despesa despesa)
+        // ============================================================
+        // POPUP DO USUÁRIO E NAVEGAÇÃO
+        // ============================================================
+
+        // Os métodos abaixo são responsáveis pelo popup de perfil e navegação entre telas.
+        // (Alguns corpos estão vazios neste trecho, mas devem ser preenchidos conforme necessário)
+
+        private void UsuarioCard_Click(object sender, MouseButtonEventArgs e)
         {
-            _despesasCollection.Insert(0, despesa);
+            _popupAberto = !_popupAberto;
+            UserPopupCard.Visibility = _popupAberto ? Visibility.Visible : Visibility.Collapsed;
+            PopupOverlay.Visibility = _popupAberto ? Visibility.Visible : Visibility.Collapsed;
+            e.Handled = true;
         }
-
-        // Remove uma despesa
-        private async void RemoverDespesa_Click(object sender, RoutedEventArgs e)
+        private void FecharPopup_Click(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Button button && button.DataContext is Transacao transacao)
-            {
-                try
-                {
-                    var resultado = MessageBox.Show("Tem certeza que deseja remover este gasto?",
-                                                  "Confirmar Remoção",
-                                                  MessageBoxButton.YesNo,
-                                                  MessageBoxImage.Question);
-
-                    if (resultado == MessageBoxResult.Yes)
-                    {
-                        await ExcluirDespesa(transacao);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Erro ao remover gasto: {ex.Message}", "Erro",
-                                  MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            _popupAberto = false;
+            UserPopupCard.Visibility = Visibility.Collapsed;
+            PopupOverlay.Visibility = Visibility.Collapsed;
         }
-
-        // Exclui uma despesa e atualiza o saldo
-        private async System.Threading.Tasks.Task ExcluirDespesa(Transacao transacao)
-        {
-            double saldoAntes = SessaoUsuario.UsuarioLogado.saldoDisponivel;
-
-            // Remove a transação e atualiza o saldo
-            await transacao.ExcluirTransacaoAsync();
-
-            // Recarrega usuário atualizado do arquivo
-            var usuarioAtualizado = await Usuario.BuscarUsuarioPorIdAsync(SessaoUsuario.UsuarioLogado.Id);
-            SessaoUsuario.UsuarioLogado = usuarioAtualizado;
-
-            // Recarrega a lista
-            CarregarDespesas();
-
-            MessageBox.Show($"Gasto removido com sucesso!\n" +
-                          $"Saldo antes: R$ {saldoAntes:F2}\n" +
-                          $"Saldo atual: R$ {usuarioAtualizado.saldoDisponivel:F2}",
-                          "Sucesso",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        // Mostra/oculta o painel de planejamento futuro
+        private void PopupConfiguracoes_Click(object sender, RoutedEventArgs e) { new ConfiguracoesWindow().Show(); Close(); }
+        private void PopupLogout_Click(object sender, RoutedEventArgs e) { SessaoUsuario.Logout(); new UserLogin().Show(); Close(); }
+        private void FinanceButton_Click(object sender, RoutedEventArgs e) { new MainWindow().Show(); Close(); }
+        private void CardsButton_Click(object sender, RoutedEventArgs e) { new Views.cartoes().Show(); Close(); }
+        private void ExpensesButton_Click(object sender, RoutedEventArgs e) { }
+        private void CreditsButton_Click(object sender, RoutedEventArgs e) { new IncomeWindow().Show(); Close(); }
+        private void GoalsButton_Click(object sender, RoutedEventArgs e) { new MetasWindow().Show(); Close(); }
+        private void BackToDashboard_Click(object sender, RoutedEventArgs e) { new MainWindow().Show(); Close(); }
         private void PlanFutureExpense_Click(object sender, RoutedEventArgs e)
         {
-            if (FuturePlanningPanel.Visibility == Visibility.Visible)
-            {
-                FuturePlanningPanel.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                FuturePlanningPanel.Visibility = Visibility.Visible;
-            }
-        }
-
-        // Salva um planejamento de despesa futura
-        private void SaveFuturePlan_Click(object sender, RoutedEventArgs e)
-        {
-            if (!ValidarCamposPlanejamentoFuturo())
-                return;
-
-            MessageBox.Show("Gasto futuro planejado com sucesso!", "Sucesso",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
-
-            LimparCamposPlanejamentoFuturo();
-        }
-
-        // Valida os campos do planejamento futuro
-        private bool ValidarCamposPlanejamentoFuturo()
-        {
-            if (string.IsNullOrWhiteSpace(FutureValueTextBox.Text) || FutureValueTextBox.Text == "0,00")
-            {
-                MessageBox.Show("Por favor, insira um valor válido para o planejamento futuro.", "Atenção",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(FutureDateTextBox.Text) || FutureDateTextBox.Text == "dd/MM/aaaa")
-            {
-                MessageBox.Show("Por favor, insira uma data válida para o planejamento futuro.", "Atenção",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-
-            return true;
-        }
-
-        // Limpa os campos do planejamento futuro
-        private void LimparCamposPlanejamentoFuturo()
-        {
-            FutureValueTextBox.Text = "0,00";
-            FutureDateTextBox.Text = "dd/MM/aaaa";
-            FuturePlanningPanel.Visibility = Visibility.Collapsed;
-        }
-
-        // Exporta relatório de despesas
-        private void ExportReport_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Relatório de gastos exportado com sucesso!", "Exportar",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        // Filtra a lista de despesas
-        private void FilterExpenses_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Filtro aplicado aos gastos!", "Filtrar",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        // Limpa todas as despesas (ação perigosa)
-        private void ClearAll_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("Tem certeza que deseja limpar todos os gastos?\nEsta ação não pode ser desfeita.",
-                                        "Confirmar Limpeza",
-                                        MessageBoxButton.YesNo,
-                                        MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                MessageBox.Show("Todos os gastos foram removidos!", "Limpeza Concluída",
-                              MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        // Volta para a tela principal do dashboard
-        private void BackToDashboard_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao voltar para dashboard: {ex.Message}", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        // Métodos de navegação entre telas
-
-        private void FinanceButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao navegar para Finanças: {ex.Message}", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CardsButton_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: Implementar tela de Cartões
-            MessageBox.Show("Navegar para Cartões", "Navegação",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void ExpensesButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Já está na tela de gastos
-            MessageBox.Show("Você já está na tela de Gastos", "Informação",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void CreditsButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                IncomeWindow incomeWindow = new IncomeWindow();
-                incomeWindow.Show();
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao navegar para Receitas: {ex.Message}", "Erro",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void GoalsButton_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: Implementar tela de Metas
-            MessageBox.Show("Navegar para Metas", "Navegação",
-                          MessageBoxButton.OK, MessageBoxImage.Information);
+            // Alterna a visibilidade do painel de planejamento futuro
+            FuturePlanningPanel.Visibility = FuturePlanningPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

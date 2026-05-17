@@ -16,9 +16,9 @@
         <!-- Fundo com gradiente -->
         <Grid.Background>
             <LinearGradientBrush>
-                <GradientStop Color="#0f132e" Offset="0.0"/>
-                <GradientStop Color="#19274e" Offset="0.5"/>
-                <GradientStop Color="#536d88" Offset="0.8"/>
+                <GradientStop Color="#1e1760" Offset="0.2"/>
+                <GradientStop Color="#1b24a1" Offset="0.6"/>
+                <GradientStop Color="#5e17eb" Offset="0.8"/>
             </LinearGradientBrush>
         </Grid.Background>
 
@@ -103,7 +103,7 @@
                                 HorizontalAlignment="Center"
                                 Margin="0,170,0,0" 
                                 Height="21" 
-                                VerticalAlignment="Top">
+                                VerticalAlignment="Top" Click="Button_Click_1">
 
                             <Button.Style>
                                 <Style TargetType="Button">
@@ -185,7 +185,7 @@
                 </Border>
 
                 <!-- Painel de boas-vindas -->
-                <Border Background="#101547"  
+                <Border Background="#101570"  
                         Padding="20" 
                         Width="276" 
                         Height="305" 

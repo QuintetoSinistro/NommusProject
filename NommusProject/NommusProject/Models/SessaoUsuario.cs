@@ -1,10 +1,16 @@
-﻿using System;
+﻿using NommusProject.Data;
+using Microsoft.Data.Sqlite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace NommusProject
 {
     public static class SessaoUsuario
     {
-        public static Usuario UsuarioLogado { get; set; }
+        public static Usuarios UsuarioLogado { get; set; }
 
         public static bool EstaLogado => UsuarioLogado != null;
 
