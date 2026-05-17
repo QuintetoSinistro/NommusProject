@@ -16,5 +16,6 @@ namespace NommusProject
         public DateTime DataVencimento { get; set; }
         public string BandeiraCartao { get; set; }
         public int IdUsuario { get; set; }
+        public string NumeroCartao { get; set; }
     }
 }
