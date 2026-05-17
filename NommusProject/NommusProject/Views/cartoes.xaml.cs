@@ -297,10 +297,6 @@ namespace NommusProject.Views
         private void GoalsButton_Click(object sender, RoutedEventArgs e) { new MetasWindow().Show(); this.Close(); }
     }
 
-    // ============================================================
-    // VIEW MODEL
-    // ============================================================
-
     public class CartaoViewModel
     {
         public int Id { get; set; }
